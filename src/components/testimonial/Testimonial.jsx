@@ -5,11 +5,12 @@ import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import TestimonialTemplate from "./TestimonialTemplate";
 import { testimonialData } from "../../data/testimonialData";
+import { useContent } from "../../services/useContent";
 import "./testimonial.css";
 
 const Testimonial = () => {
   const swiperRef = useRef(null);
-  const testimonials = testimonialData;
+  const testimonials = useContent("testimonials", testimonialData);
 
   return (
     <div className="flex mx-auto justify-center px-2 max-w-218 pb-10 md:pb-25">

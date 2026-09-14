@@ -1,8 +1,9 @@
 import Projects from "./Projects";
 import { projectData } from "../../data/projectData";
+import { useContent } from "../../services/useContent";
 
 const Portfolio = () => {
-  const projects = projectData;
+  const projects = useContent("projects", projectData);
 
   return (
     <div

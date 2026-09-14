@@ -1,4 +1,5 @@
 import Marquee from "react-fast-marquee";
+import { useContent } from "../../services/useContent";
 
 const commonSVGClass = "h-7 sm:h-10 md:h-12";
 
@@ -78,6 +79,9 @@ const ClientItem = ({ logo, name }) => (
 );
 
 const HappyClients = () => {
+  // API rows carry a logo URL; the bundled fallbacks are inline SVG elements.
+  const clients = useContent("clients", clientLogos);
+
   return (
     <div className="content py-10 md:py-25 flex flex-col items-center px-2">
       <div className="max-w-144.25 text-center">
@@ -89,8 +93,20 @@ const HappyClients = () => {
       </div>
       <Marquee pauseOnHover={true} speed={80} className="mt-6 md:mt-10">
         <div className="flex items-center py-2">
-          {clientLogos.map((item) => (
-            <ClientItem key={item.key} name={item.name} logo={item.el} />
+          {clients.map((item) => (
+            <ClientItem
+              key={item.key ?? item.id}
+              name={item.name}
+              logo={
+                item.el ?? (
+                  <img
+                    src={item.logo}
+                    alt={item.name}
+                    className="h-10 sm:h-12 md:h-14 w-auto max-w-[140px] object-contain"
+                  />
+                )
+              }
+            />
           ))}
         </div>
       </Marquee>

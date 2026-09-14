@@ -1,6 +1,7 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { blogData } from "../data/blogData";
+import { useContent } from "../services/useContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendarDays, faClock, faComment, faTag } from "@fortawesome/free-solid-svg-icons";
 import ScrollReveal from "../components/common/ScrollReveal";
@@ -8,7 +9,8 @@ import ScrollReveal from "../components/common/ScrollReveal";
 const BlogDetail = () => {
   const { id } = useParams();
 
-  const blog = blogData.find((b) => String(b.id) === String(id));
+  const allBlogs = useContent("blogs", blogData);
+  const blog = allBlogs.find((b) => String(b.id) === String(id));
 
   if (!blog) return <Navigate to="/" replace />;
 

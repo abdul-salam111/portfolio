@@ -1,0 +1,40 @@
+# Render Blueprint. In the dashboard: New > Blueprint, point it at this repo,
+# then fill in the values marked `sync: false` (Render prompts for each).
+services:
+  - type: web
+    name: portfolio-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+      # Neon connection string, e.g.
+      # postgresql://user:pass@ep-xxx.eu-central-1.aws.neon.tech/neondb?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+
+      # Render generates a strong random secret; never set this by hand.
+      - key: JWT_SECRET
+        generateValue: true
+
+      # Seeds the first admin account on the very first boot only.
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      # Browser origins allowed to call this API.
+      - key: CORS_ORIGINS
+        value: https://abdul-salam111.github.io,http://localhost:5173
+
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false

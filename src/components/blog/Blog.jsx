@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "./blog.css";
 import { blogData } from "../../data/blogData";
+import { useContent } from "../../services/useContent";
 
 const custom_breakpoints = {
   640: { slidesPerView: 2, spaceBetween: 20 },
@@ -12,7 +13,7 @@ const custom_breakpoints = {
 };
 
 const Blog = () => {
-  const blogs = blogData;
+  const blogs = useContent("blogs", blogData);
 
   return (
     <div className="content py-25 px-2 relative" id="blog">
