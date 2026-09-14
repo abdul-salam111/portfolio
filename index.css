@@ -2,7 +2,10 @@
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark, cupcake;
+  /* No dark styles exist in this app — the layout hardcodes light
+     backgrounds — so daisyUI must not flip on the OS preference. `dark`
+     stays selectable via data-theme if a real dark mode is built later. */
+  themes: light --default, dark, cupcake;
 }
 
 * {

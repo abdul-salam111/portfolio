@@ -99,7 +99,7 @@ const Admin = () => {
             autoComplete="username"
             onChange={(e) => { setUsername(e.target.value); setError(""); }}
             onKeyDown={(e) => e.key === "Enter" && login()}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm mb-3 outline-none focus:border-[#0080ff] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm mb-3 outline-none focus:border-[#0080ff] transition-colors bg-white text-[#132238] placeholder:text-gray-400"
             autoFocus
           />
           <input
@@ -109,7 +109,7 @@ const Admin = () => {
             autoComplete="current-password"
             onChange={(e) => { setPass(e.target.value); setError(""); }}
             onKeyDown={(e) => e.key === "Enter" && login()}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm mb-3 outline-none focus:border-[#0080ff] transition-colors"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm mb-3 outline-none focus:border-[#0080ff] transition-colors bg-white text-[#132238] placeholder:text-gray-400"
           />
           {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
           <button onClick={login} disabled={busy}

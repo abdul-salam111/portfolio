@@ -67,7 +67,7 @@ export default function ImageUpload({ value, onChange, folder = "uploads", label
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="…or paste an image URL"
-        className="mt-2 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#0080ff] transition-colors text-gray-500"
+        className="mt-2 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#0080ff] transition-colors bg-white text-[#132238] placeholder:text-gray-400"
       />
 
       <input
