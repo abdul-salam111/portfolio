@@ -1,8 +1,7 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-import { projectData as staticProjectData } from "../data/projectData";
-import { projectsPromise } from "../services/prefetch";
+import { useRef } from "react";
+import { projectData } from "../data/projectData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faGooglePlay, faApple } from "@fortawesome/free-brands-svg-icons";
@@ -20,15 +19,7 @@ const isRealLink = (link) => link && link !== "#!";
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const [allProjects, setAllProjects] = useState(staticProjectData);
-
-  useEffect(() => {
-    projectsPromise.then((data) => {
-      if (data.length > 0) setAllProjects(data);
-    });
-  }, []);
-
-  const project = allProjects.find((p) => String(p.id) === String(id));
+  const project = projectData.find((p) => String(p.id) === String(id));
   const techRef = useRef(null);
   const techInView = useInView(techRef, { once: true, margin: "-50px 0px" });
 

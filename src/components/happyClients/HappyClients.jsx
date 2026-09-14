@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "../../firebase";
 import Marquee from "react-fast-marquee";
 
 const commonSVGClass = "h-7 sm:h-10 md:h-12";
 
-const staticLogos = [
+const clientLogos = [
   {
     key: "google",
     name: "Google",
@@ -81,42 +78,6 @@ const ClientItem = ({ logo, name }) => (
 );
 
 const HappyClients = () => {
-  const [logos, setLogos] = useState(null);
-
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const snap = await getDocs(query(collection(db, "clients"), orderBy("order", "asc")));
-        const data = snap.docs.map((d) => ({ ...d.data(), _docId: d.id }));
-        setLogos(data.length > 0 ? data : null);
-      } catch {
-        setLogos(null);
-      }
-    };
-    fetch();
-  }, []);
-
-  const renderLogos = () => {
-    if (logos) {
-      return logos.map((c) => (
-        <ClientItem
-          key={c._docId}
-          name={c.name}
-          logo={
-            <img
-              src={c.logo}
-              alt={c.name}
-              className="h-10 sm:h-12 md:h-14 w-auto max-w-[140px] object-contain"
-            />
-          }
-        />
-      ));
-    }
-    return staticLogos.map((item) => (
-      <ClientItem key={item.key} name={item.name} logo={item.el} />
-    ));
-  };
-
   return (
     <div className="content py-10 md:py-25 flex flex-col items-center px-2">
       <div className="max-w-144.25 text-center">
@@ -128,7 +89,9 @@ const HappyClients = () => {
       </div>
       <Marquee pauseOnHover={true} speed={80} className="mt-6 md:mt-10">
         <div className="flex items-center py-2">
-          {renderLogos()}
+          {clientLogos.map((item) => (
+            <ClientItem key={item.key} name={item.name} logo={item.el} />
+          ))}
         </div>
       </Marquee>
     </div>

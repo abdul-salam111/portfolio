@@ -1,23 +1,14 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { blogsPromise } from "../services/prefetch";
+import { blogData } from "../data/blogData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendarDays, faClock, faComment, faTag } from "@fortawesome/free-solid-svg-icons";
 import ScrollReveal from "../components/common/ScrollReveal";
-import Loading from "../components/common/loading/Loading";
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const [allBlogs, setAllBlogs] = useState(null); // null = not yet loaded
 
-  useEffect(() => {
-    blogsPromise.then((data) => setAllBlogs(data));
-  }, []);
-
-  if (allBlogs === null) return <Loading />;
-
-  const blog = allBlogs.find((b) => String(b.id) === String(id));
+  const blog = blogData.find((b) => String(b.id) === String(id));
 
   if (!blog) return <Navigate to="/" replace />;
 

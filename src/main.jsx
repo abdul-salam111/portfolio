@@ -1,4 +1,3 @@
-import "./services/prefetch"; // starts Firestore queries immediately — must be first
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { router } from "./routes/Router";

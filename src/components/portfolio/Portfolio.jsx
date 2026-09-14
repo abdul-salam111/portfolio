@@ -1,16 +1,8 @@
-import { useState, useEffect } from "react";
 import Projects from "./Projects";
-import { projectData as staticProjectData } from "../../data/projectData";
-import { projectsPromise } from "../../services/prefetch";
+import { projectData } from "../../data/projectData";
 
 const Portfolio = () => {
-  const [projects, setProjects] = useState(staticProjectData);
-
-  useEffect(() => {
-    projectsPromise.then((data) => {
-      if (data.length > 0) setProjects(data);
-    });
-  }, []);
+  const projects = projectData;
 
   return (
     <div
