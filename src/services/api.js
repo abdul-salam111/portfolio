@@ -89,6 +89,19 @@ export async function fetchPublic(resource, fallback = [], signal) {
   }
 }
 
+/** Public contact-form submission. */
+export const submitContact = (fields) =>
+  request("/api/contact", { method: "POST", body: fields });
+
+/** Admin inbox for contact messages. */
+export const messages = {
+  listAll: () => request("/api/contact/admin/all", { auth: true }),
+  unreadCount: () => request("/api/contact/admin/unread-count", { auth: true }),
+  setRead: (id, read) =>
+    request(`/api/contact/${id}/read`, { method: "PUT", auth: true, body: { read } }),
+  remove: (id) => request(`/api/contact/${id}`, { method: "DELETE", auth: true }),
+};
+
 export const auth = {
   login: (username, password) =>
     request("/api/auth/login", { method: "POST", body: { username, password } }),

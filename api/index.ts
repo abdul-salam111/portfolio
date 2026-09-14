@@ -4,6 +4,7 @@ import { pool } from "./db";
 import { issueToken, verifyRequest, checkPassword, setPassword } from "./auth";
 import { crudRoutes } from "./crud";
 import { uploadRoutes } from "./uploads";
+import { contactRoutes } from "./contact";
 
 const ALLOWED_ORIGINS = (
   process.env.CORS_ORIGINS ||
@@ -94,6 +95,10 @@ app.route("/api/clients", crudRoutes("clients"));
 // ---------- images ----------
 
 app.route("/api", uploadRoutes());
+
+// ---------- contact ----------
+
+app.route("/api/contact", contactRoutes());
 
 app.notFound((c) => c.json({ detail: "Not found" }, 404));
 

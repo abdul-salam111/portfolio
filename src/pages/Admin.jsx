@@ -3,7 +3,8 @@ import AdminProjects from "../components/admin/AdminProjects";
 import AdminBlogs from "../components/admin/AdminBlogs";
 import AdminTestimonials from "../components/admin/AdminTestimonials";
 import AdminClients from "../components/admin/AdminClients";
-import { auth, clearToken, getToken, isApiConfigured, setToken } from "../services/api";
+import AdminMessages from "../components/admin/AdminMessages";
+import { auth, clearToken, getToken, isApiConfigured, messages, setToken } from "../services/api";
 
 const Admin = () => {
   const [authed, setAuthed] = useState(false);
@@ -13,6 +14,7 @@ const Admin = () => {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState("projects");
+  const [unread, setUnread] = useState(0);
 
   // A stored token may have expired while the tab was closed, so validate it
   // against the server rather than trusting its presence.
@@ -52,6 +54,19 @@ const Admin = () => {
       setBusy(false);
     }
   }, [username, pass]);
+
+  // Refresh the unread badge on sign-in and every 60s while the panel is open.
+  useEffect(() => {
+    if (!authed) return;
+    let alive = true;
+    const tick = () =>
+      messages.unreadCount()
+        .then((r) => alive && setUnread(r.count))
+        .catch(() => {});
+    tick();
+    const id = setInterval(tick, 60000);
+    return () => { alive = false; clearInterval(id); };
+  }, [authed]);
 
   const logout = () => {
     clearToken();
@@ -138,15 +153,22 @@ const Admin = () => {
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Tabs */}
-        <div className="flex gap-2 mb-8">
-          {["projects", "blogs", "testimonials", "clients"].map((t) => (
+        <div className="flex flex-wrap gap-2 mb-8">
+          {["projects", "blogs", "testimonials", "clients", "messages"].map((t) => (
             <button key={t} onClick={() => setTab(t)}
-              className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all capitalize ${
+              className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all capitalize inline-flex items-center gap-2 ${
                 tab === t
                   ? "bg-[#0080ff] text-white shadow-md shadow-blue-200"
                   : "bg-white text-[#132238] hover:bg-[#e8f4fd]"
               }`}>
               {t}
+              {t === "messages" && unread > 0 && (
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                  tab === t ? "bg-white text-[#0080ff]" : "bg-[#0080ff] text-white"
+                }`}>
+                  {unread}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -155,6 +177,7 @@ const Admin = () => {
         {tab === "blogs" && <AdminBlogs />}
         {tab === "testimonials" && <AdminTestimonials />}
         {tab === "clients" && <AdminClients />}
+        {tab === "messages" && <AdminMessages onUnreadChange={setUnread} />}
       </div>
     </div>
   );

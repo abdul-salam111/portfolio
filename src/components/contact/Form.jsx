@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import emailjs from "@emailjs/browser";
+import { submitContact } from "../../services/api";
 
 const telegramSVG = (
   <svg className="w-4 md:w-6 aspect-square" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,6 +16,9 @@ const Form = () => {
   const formRef = useRef(null);
   const [fields, setFields] = useState(empty);
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [error, setError] = useState("");
+  // Hidden from humans; bots fill it in and the API silently discards those.
+  const [honeypot, setHoneypot] = useState("");
 
   const set = (key, val) => setFields((f) => ({ ...f, [key]: val }));
 
@@ -23,29 +26,14 @@ const Form = () => {
     e.preventDefault();
     setStatus("sending");
 
-    const serviceId  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name:    fields.name,
-          from_email:   fields.email,
-          location:     fields.location,
-          budget:       fields.budget,
-          subject:      fields.subject,
-          message:      fields.message,
-          to_email:     "abdulsalam.0302@gmail.com",
-        },
-        publicKey
-      );
+      // The API stores the message before attempting any notification, so a
+      // submission is never lost to a mail provider being down.
+      await submitContact({ ...fields, website: honeypot });
       setStatus("success");
       setFields(empty);
     } catch (err) {
-      console.error("EmailJS error:", err);
+      setError(err.message || "Something went wrong.");
       setStatus("error");
     }
   };
@@ -69,12 +57,22 @@ const Form = () => {
 
       {status === "error" && (
         <p className="mt-3 text-sm text-red-500 bg-red-50 px-4 py-2 rounded-lg">
-          Failed to send. Please try again or email me directly at abdulsalam.0302@gmail.com
+          {error || "Failed to send."} You can also email me directly at abdulsalam.0302@gmail.com
         </p>
       )}
 
       <div className="mx-2">
         <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+          />
           <input type="text" placeholder="Name*" required className={commonClass}
             value={fields.name} onChange={(e) => set("name", e.target.value)} />
 
