@@ -4,15 +4,13 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
+  { ignores: ["dist/**", "backend/**", "node_modules/**"] },
   {
-    env: {
-      node: true,
-      //   commonjs: true,
-    },
     files: ["**/*.{js,jsx}"],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      // Flat config has no `env` key; browser + node globals go here instead.
+      globals: { ...globals.browser, ...globals.node },
       parserOptions: {
         ecmaVersion: "latest",
         ecmaFeatures: { jsx: true },
@@ -26,7 +24,19 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      // eslint-plugin-react (which supplies react/jsx-uses-vars) is not a
+      // dependency here, so ESLint cannot see identifiers consumed only as JSX
+      // namespaces — `motion` in `<motion.div>` reads as unused. Allow it
+      // explicitly rather than deleting imports the components genuinely need.
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^([A-Z_]|motion$)",
+          // `const { id, ...data } = form` deliberately drops a field.
+          ignoreRestSiblings: true,
+          argsIgnorePattern: "^_",
+        },
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },

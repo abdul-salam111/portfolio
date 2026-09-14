@@ -1,179 +1,259 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { blogData } from "../data/blogData";
-import { useContent } from "../services/useContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendarDays, faClock, faComment, faTag } from "@fortawesome/free-solid-svg-icons";
-import ScrollReveal from "../components/common/ScrollReveal";
+import { blogData } from "../data/blogData";
+import { useContent } from "../services/useContent";
+import { Aurora, Magnetic, Reveal } from "../components/motion";
+
+const easeOut = [0.16, 1, 0.3, 1];
+
+// The hero is an always-dark band. Tailwind's `border-line` / `text-fg-muted`
+// utilities are resolved at :root and cannot be re-pointed here, but the shared
+// `.chip` and `.grid-lines` classes read the raw tokens directly — pinning those
+// to their dark values keeps both readable when the site is in its light theme.
+const darkBand = {
+  "--border-hairline": "rgb(255 255 255 / 0.13)",
+  "--border-strong": "rgb(255 255 255 / 0.24)",
+  "--surface-veil": "rgb(255 255 255 / 0.08)",
+  "--text-muted": "rgb(255 255 255 / 0.74)",
+};
+
+// Tailwind Typography ships near-black defaults, and the theme switches on
+// `data-theme` rather than Tailwind's `dark:` variant, so `dark:prose-invert`
+// never fires. daisyUI re-declares the same custom properties at `:root .prose`,
+// which outranks a class-level override — setting them inline is the only form
+// that reliably wins, so the article body follows the tokens in both themes.
+const proseTokens = {
+  "--tw-prose-body": "var(--text-muted)",
+  "--tw-prose-headings": "var(--text)",
+  "--tw-prose-lead": "var(--text-muted)",
+  "--tw-prose-links": "var(--accent)",
+  "--tw-prose-bold": "var(--text)",
+  "--tw-prose-counters": "var(--text-faint)",
+  "--tw-prose-bullets": "var(--border-strong)",
+  "--tw-prose-hr": "var(--border-hairline)",
+  "--tw-prose-quotes": "var(--text)",
+  "--tw-prose-quote-borders": "var(--accent)",
+  "--tw-prose-captions": "var(--text-faint)",
+  "--tw-prose-code": "var(--text)",
+  "--tw-prose-pre-code": "var(--text)",
+  "--tw-prose-pre-bg": "var(--bg-sunken)",
+  "--tw-prose-th-borders": "var(--border-strong)",
+  "--tw-prose-td-borders": "var(--border-hairline)",
+};
+
+const proseClasses = [
+  "prose prose-base max-w-none",
+  "prose-headings:font-display prose-headings:font-semibold",
+  "prose-p:leading-relaxed prose-a:font-medium",
+  "prose-blockquote:border-l-2 prose-blockquote:not-italic",
+  "prose-img:max-w-sm prose-img:rounded-xl prose-img:border prose-img:border-line",
+  "prose-pre:rounded-xl prose-pre:border prose-pre:border-line",
+  // Pasted editor markup carries its own inline highlight colours; neutralise
+  // them so code blocks inherit the themed foreground instead.
+  "[&_pre_*]:bg-transparent [&_pre_*]:text-inherit",
+  "[&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-brand/10 [&_:not(pre)>code]:px-1.5",
+  "[&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:text-brand",
+  "[&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none",
+].join(" ");
+
+const isRealLink = (link) => link && link !== "#!";
 
 const BlogDetail = () => {
   const { id } = useParams();
-
   const allBlogs = useContent("blogs", blogData);
   const blog = allBlogs.find((b) => String(b.id) === String(id));
 
   if (!blog) return <Navigate to="/" replace />;
 
-  const isRealLink = (link) => link && link !== "#!";
   const hasContent = !!blog.content && blog.content !== "<p></p>";
   const tags = Array.isArray(blog.tags) ? blog.tags : [];
+  // Bundled posts carry only a title and date, so the article wrapper must not
+  // reserve vertical space when there is nothing to put in it.
+  const hasBody = !!blog.excerpt || hasContent || tags.length > 0;
 
   return (
-    <div className="bg-white">
+    <div className="bg-bg">
 
       {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#01579b] via-[#0080ff] to-[#54c5f8] pt-10 pb-32 px-4">
-        <div className="content">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
-            <Link to="/#blog" className="inline-flex items-center gap-2 text-blue-100 hover:text-white transition-colors mb-10 group text-sm font-medium">
-              <FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-200" />
+      <section className="relative overflow-hidden bg-ink pt-32 pb-36 sm:pt-36" style={darkBand}>
+        <Aurora />
+        <div className="grid-lines" aria-hidden="true" />
+
+        <div className="content relative z-10">
+          <motion.div
+            initial={{ opacity: 0, x: -18 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <Link
+              to="/#blog"
+              className="group inline-flex items-center gap-2 text-fluid-sm font-medium text-white/70 hover:text-white"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="transition-transform duration-200 group-hover:-translate-x-1" />
               Back to Blog
             </Link>
           </motion.div>
 
-          {/* Category chip */}
           {blog.category && (
-            <motion.div className="mb-5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}>
-              <span className="text-xs bg-white/15 text-white px-3 py-1 rounded-full backdrop-blur-sm border border-white/20 font-medium">
-                {blog.category}
-              </span>
+            <motion.div
+              className="mt-10"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.65, ease: easeOut }}
+            >
+              <span className="chip">{blog.category}</span>
             </motion.div>
           )}
 
           <motion.h1
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight max-w-3xl"
-            initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5 }}
+            className="mt-6 max-w-4xl text-fluid-3xl text-white sm:text-fluid-4xl"
+            initial={{ opacity: 0, y: 26 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.22, duration: 0.75, ease: easeOut }}
           >
             {blog.title}
           </motion.h1>
 
-          {/* Meta row */}
           <motion.div
-            className="flex flex-wrap items-center gap-4 text-blue-100 text-sm"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}
+            className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-fluid-xs tracking-wide text-white/70"
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32, duration: 0.75, ease: easeOut }}
           >
             {blog.date && (
-              <span className="flex items-center gap-1.5">
-                <FontAwesomeIcon icon={faCalendarDays} className="text-xs opacity-70" />
+              <span className="inline-flex items-center gap-1.5">
+                <FontAwesomeIcon icon={faCalendarDays} className="opacity-60" />
                 {blog.date}
               </span>
             )}
             {blog.readTime && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-blue-300/60" />
-                <FontAwesomeIcon icon={faClock} className="text-xs opacity-70" />
+              <span className="inline-flex items-center gap-1.5">
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-white/35" />
+                <FontAwesomeIcon icon={faClock} className="opacity-60" />
                 {blog.readTime}
               </span>
             )}
             {blog.comments > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-blue-300/60" />
-                <FontAwesomeIcon icon={faComment} className="text-xs opacity-70" />
+              <span className="inline-flex items-center gap-1.5">
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-white/35" />
+                <FontAwesomeIcon icon={faComment} className="opacity-60" />
                 {blog.comments} Comments
               </span>
             )}
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Cover image floating over hero ── */}
+      {/* ── Cover image floating over the hero ── */}
       {blog.image && (
-        <div className="content px-4 -mt-20 relative z-10">
+        <div className="content relative z-20 -mt-20">
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.96 }}
+            initial={{ opacity: 0, y: 48, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.45, duration: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-            className="rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,128,255,0.28)] border border-white/80"
+            transition={{ delay: 0.42, duration: 0.85, ease: easeOut }}
+            className="overflow-hidden rounded-[1.5rem] border border-line bg-surface"
+            style={{ boxShadow: "var(--shadow-lifted)" }}
           >
-            <img src={blog.image} alt={blog.title} className="w-full max-h-[480px] object-cover" />
+            <img
+              src={blog.image}
+              alt={blog.title ? `${blog.title} cover` : "Article cover"}
+              loading="eager"
+              className="max-h-[480px] w-full object-cover"
+            />
           </motion.div>
         </div>
       )}
 
-      {/* ── Excerpt ── */}
-      {blog.excerpt && (
-        <div className="content px-4 mt-14">
-          <ScrollReveal>
-            <div className="max-w-3xl mx-auto">
-              <div className="border-l-4 border-[#0080ff] pl-6 py-1">
-                <p className="text-[#132238] text-lg sm:text-xl font-medium italic leading-relaxed">
-                  {blog.excerpt}
-                </p>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      )}
+      {/* ── Article ── */}
+      <div className={`content pb-6 ${hasBody ? "pt-16" : ""}`}>
 
-      {/* ── Article body ── */}
-      {hasContent && (
-        <ScrollReveal>
-          <div className="content px-4 mt-12 pb-4">
-            <div
-              className="max-w-3xl mx-auto prose prose-base prose-headings:text-[#132238] prose-headings:font-bold prose-p:text-[#4a5568] prose-p:leading-relaxed prose-a:text-[#0080ff] prose-strong:text-[#132238] prose-blockquote:border-[#0080ff] prose-blockquote:text-[#4a5568] prose-li:text-[#4a5568] prose-img:max-w-sm prose-img:rounded-xl [&_:not(pre)>code]:text-[#0080ff] [&_:not(pre)>code]:bg-[#e8f4fd] [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:rounded prose-pre:bg-[#1e1e1e] prose-pre:rounded-xl prose-pre:border prose-pre:border-white/10 [&_pre]:text-[#d4d4d4] [&_pre_*]:bg-transparent [&_pre_*]:text-inherit max-w-none"
+        {blog.excerpt && (
+          <Reveal className="mx-auto max-w-3xl">
+            <blockquote className="border-l-2 border-brand pl-6">
+              <p className="text-fluid-lg font-medium leading-relaxed text-fg">
+                {blog.excerpt}
+              </p>
+            </blockquote>
+          </Reveal>
+        )}
+
+        {hasContent && (
+          <Reveal delay={0.08} className={`mx-auto max-w-3xl ${blog.excerpt ? "mt-12" : ""}`}>
+            <article
+              className={proseClasses}
+              style={proseTokens}
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
-          </div>
-        </ScrollReveal>
-      )}
+          </Reveal>
+        )}
 
-      {/* ── Tags ── */}
-      {tags.length > 0 && (
-        <div className="content px-4 py-10">
-          <div className="max-w-3xl mx-auto">
-            <ScrollReveal>
-              <div className="border-t border-gray-100 pt-8 flex flex-wrap items-center gap-3">
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                  <FontAwesomeIcon icon={faTag} />
-                  Tags
+        {tags.length > 0 && (
+          <Reveal className="mx-auto mt-14 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-3 border-t border-line pt-8">
+              <span className="inline-flex items-center gap-1.5 font-mono text-fluid-xs uppercase tracking-[0.22em] text-fg-faint">
+                <FontAwesomeIcon icon={faTag} />
+                Tags
+              </span>
+              {tags.map((tag) => (
+                <span key={tag} className="chip chip-accent cursor-default px-4 py-2 text-[0.72rem]">
+                  {tag}
                 </span>
-                {tags.map((tag) => (
-                  <span key={tag} className="text-sm bg-[#e8f4fd] text-[#0080ff] px-4 py-1.5 rounded-full font-medium border border-[#0080ff]/15 hover:bg-[#0080ff] hover:text-white transition-colors duration-200 cursor-default">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          </Reveal>
+        )}
+      </div>
 
       {/* ── CTA ── */}
-      <div className="bg-gradient-to-br from-[#01579b] to-[#0080ff] py-20 px-4 mt-6">
-        <div className="content text-center">
-          <ScrollReveal>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+      <section className="section relative overflow-hidden border-t border-line bg-bg-elev">
+        <Aurora />
+        <div className="content relative z-10 text-center">
+          <Reveal>
+            <span className="eyebrow eyebrow-center">
+              {isRealLink(blog.link) ? "Keep reading" : "Say hello"}
+            </span>
+            <h2 className="section-title mt-4">
               {isRealLink(blog.link) ? "Read the Full Article" : "Enjoyed this Post?"}
             </h2>
-            <p className="text-blue-100 text-base sm:text-lg mb-10">
+            <p className="section-lead mx-auto mt-5 text-center">
               {isRealLink(blog.link)
                 ? "This post is also available on an external platform."
                 : "Feel free to reach out — I love talking about Flutter and mobile development."}
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
               {isRealLink(blog.link) && (
-                <motion.a href={blog.link} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-3 bg-white text-[#0080ff] font-semibold px-7 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  Read Full Article
-                  <FontAwesomeIcon icon={faArrowRight} />
-                </motion.a>
+                <Magnetic strength={0.2}>
+                  <a
+                    href={blog.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary h-12 min-h-12 gap-3 px-7 text-fluid-base"
+                  >
+                    Read Full Article
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </a>
+                </Magnetic>
               )}
-              <motion.a href="/#contact"
-                whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-3 bg-white/15 text-white font-semibold px-7 py-4 rounded-xl border border-white/25 hover:bg-white/25 transition-colors duration-300">
-                Get in Touch
-              </motion.a>
+              <Magnetic strength={0.2}>
+                <a href="/#contact" className="btn btn-ghost-line h-12 min-h-12 px-7 text-fluid-base">
+                  Get in Touch
+                </a>
+              </Magnetic>
             </div>
 
-            <Link to="/#blog" className="text-blue-200 hover:text-white transition-colors duration-200 inline-flex items-center gap-2 group text-sm font-medium">
-              <FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-200" />
+            <Link
+              to="/#blog"
+              className="group mt-12 inline-flex items-center gap-2 text-fluid-sm font-medium text-fg-muted hover:text-brand"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="transition-transform duration-200 group-hover:-translate-x-1" />
               Back to all posts
             </Link>
-          </ScrollReveal>
+          </Reveal>
         </div>
-      </div>
+      </section>
 
     </div>
   );

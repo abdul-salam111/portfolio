@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { Reveal, RevealGroup, useMotionPrefs } from "../motion";
 import WorkSteps from "./WorkSteps";
 
 const workStepData = [
@@ -36,37 +39,75 @@ const workStepData = [
 ];
 
 const WorkProcess = () => {
-  return (
-    <div
-      className="content grid xl:grid-cols-2 xl:items-center px-2 py-5 md:py-10 lg:py-25 xl:py-35 max-xxl:px-4"
-      id="work-process"
-    >
-      <div className="lg:pe-10 xl:pe-35.75 max-xs:mb-3 max-xl:mb-8">
-        <p className="section-title max-xl:text-center">Work Process</p>
-        <p className="mt-6 mb-4 md:text-[18px] text-sm font-normal max-xl:text-center text-soft-dark">
-          I follow a structured, outcome-driven approach to every project —
-          starting with a clear understanding of the problem, then designing
-          systems that are built to last, not just built to ship.
-        </p>
-        <p className="mt-6 md:text-[18px] text-sm font-normal max-xl:text-center text-soft-dark">
-          Whether it's a mobile app, a backend service, or a full-stack
-          product, the process stays the same: plan thoroughly, build cleanly,
-          test rigorously, and deliver reliably.
-        </p>
-      </div>
+  const timelineRef = useRef(null);
+  const { reduced } = useMotionPrefs();
 
-      <div className="grid xs:grid-cols-2 gap-4 sm:gap-6 my-2 w-full">
-        {workStepData.map((data, index) => (
-          <WorkSteps
-            data={data}
-            style={`max-xs:mt-3 p-4 sm:p-8 bg-white aspect-auto w-full ${
-              index % 2 == 1 ? "xs:mt-6" : "xs:mb-6"
-            }`}
-            key={index}
+  // Fills the accent rail as the reader moves through the steps.
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 70%", "end 60%"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 26,
+    mass: 0.35,
+  });
+
+  return (
+    <section id="work-process" className="section relative">
+      <div className="content grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="self-start lg:sticky lg:top-32 lg:col-span-5">
+          <span className="eyebrow">How I Work</span>
+          <h2 className="section-title mt-5">Work Process</h2>
+          <p className="section-lead mt-6">
+            A structured, outcome-driven approach to every project: understand
+            the problem first, then design systems built to last, not just built
+            to ship.
+          </p>
+          <p className="section-lead mt-4">
+            Mobile app, backend service or full-stack product — the process
+            holds. Plan thoroughly, build cleanly, test rigorously, deliver
+            reliably.
+          </p>
+          <span className="chip mt-8">Four stages · every engagement</span>
+        </Reveal>
+
+        <div ref={timelineRef} className="relative lg:col-span-7">
+          {/* Rail sits on the node centres (left-6 = half of the 3rem node). */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-6 bottom-0 left-6 w-px -translate-x-1/2"
+            style={{
+              background:
+                "linear-gradient(to bottom, var(--border-hairline), var(--border-hairline) 80%, transparent)",
+            }}
           />
-        ))}
+          <motion.span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-6 bottom-0 left-6 w-px"
+            style={{
+              background:
+                "linear-gradient(to bottom, var(--accent), var(--accent-soft))",
+              boxShadow: "0 0 12px var(--glow)",
+              transformOrigin: "top",
+              x: "-50%",
+              scaleY: reduced ? 1 : progress,
+            }}
+          />
+
+          <RevealGroup role="list" className="relative" stagger={0.1}>
+            {workStepData.map((data, index) => (
+              <WorkSteps
+                key={data.id}
+                data={data}
+                index={index}
+                total={workStepData.length}
+              />
+            ))}
+          </RevealGroup>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

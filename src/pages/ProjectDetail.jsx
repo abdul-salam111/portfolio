@@ -1,12 +1,14 @@
+import { useRef } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { projectData } from "../data/projectData";
-import { useContent } from "../services/useContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faGooglePlay, faApple } from "@fortawesome/free-brands-svg-icons";
-import ScrollReveal from "../components/common/ScrollReveal";
+import { projectData } from "../data/projectData";
+import { useContent } from "../services/useContent";
+import { Aurora, Magnetic, Reveal, RevealGroup, RevealItem, TiltCard } from "../components/motion";
+
+const easeOut = [0.16, 1, 0.3, 1];
 
 const chipVariants = {
   hidden: { opacity: 0, scale: 0.7, y: 10 },
@@ -16,7 +18,41 @@ const chipVariants = {
   }),
 };
 
+// The hero is an always-dark band. Tailwind's `border-line` / `text-fg-muted`
+// utilities are resolved at :root and cannot be re-pointed here, but the shared
+// `.chip` and `.grid-lines` classes read the raw tokens directly — pinning those
+// to their dark values keeps both readable when the site is in its light theme.
+const darkBand = {
+  "--border-hairline": "rgb(255 255 255 / 0.13)",
+  "--border-strong": "rgb(255 255 255 / 0.24)",
+  "--surface-veil": "rgb(255 255 255 / 0.08)",
+  "--text-muted": "rgb(255 255 255 / 0.74)",
+};
+
 const isRealLink = (link) => link && link !== "#!";
+
+const StoreBadge = ({ href, icon, label, pending }) =>
+  isRealLink(href) ? (
+    <Magnetic strength={0.2}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-primary h-12 min-h-12 gap-3 px-7 text-fluid-base"
+      >
+        <FontAwesomeIcon icon={icon} className="text-lg" />
+        {label}
+      </a>
+    </Magnetic>
+  ) : (
+    <span
+      aria-disabled="true"
+      className="btn btn-ghost-line h-12 min-h-12 cursor-not-allowed gap-3 px-7 text-fluid-base opacity-60"
+    >
+      <FontAwesomeIcon icon={icon} className="text-lg" />
+      {pending}
+    </span>
+  );
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -27,55 +63,87 @@ const ProjectDetail = () => {
 
   if (!project) return <Navigate to="/" replace />;
 
+  const categories = project.category?.split(" · ") ?? [];
   const hasScreenshot0 = !!project.screenshots?.[0];
   const hasScreenshot1 = !!project.screenshots?.[1];
 
   return (
-    <div className="bg-white">
+    <div className="bg-bg">
 
       {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#01579b] via-[#0080ff] to-[#54c5f8] pt-10 pb-32 px-4">
-        <div className="content">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
-            <Link to="/" className="inline-flex items-center gap-2 text-blue-100 hover:text-white transition-colors mb-10 group text-sm font-medium">
-              <FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-200" />
+      <section className="relative overflow-hidden bg-ink pt-32 pb-36 sm:pt-36" style={darkBand}>
+        <Aurora />
+        <div className="grid-lines" aria-hidden="true" />
+
+        <div className="content relative z-10">
+          <motion.div
+            initial={{ opacity: 0, x: -18 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: easeOut }}
+          >
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-2 text-fluid-sm font-medium text-white/70 hover:text-white"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="transition-transform duration-200 group-hover:-translate-x-1" />
               Back to Portfolio
             </Link>
           </motion.div>
 
-          <motion.div className="flex flex-wrap gap-2 mb-5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}>
-            {project.category.split(" · ").map((cat) => (
-              <span key={cat} className="text-xs bg-white/15 text-white px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">{cat}</span>
-            ))}
-          </motion.div>
+          {categories.length > 0 && (
+            <motion.div
+              className="mt-10 flex flex-wrap gap-2"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.65, ease: easeOut }}
+            >
+              {categories.map((cat) => (
+                <span key={cat} className="chip">{cat}</span>
+              ))}
+            </motion.div>
+          )}
 
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight"
-            initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5 }}
+            className="mt-6 max-w-4xl text-fluid-4xl text-white"
+            initial={{ opacity: 0, y: 26 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.22, duration: 0.75, ease: easeOut }}
           >
             {project.title}
           </motion.h1>
 
-          <motion.p
-            className="text-blue-100 text-lg sm:text-xl max-w-2xl leading-relaxed"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}
-          >
-            {project.tagline}
-          </motion.p>
+          {project.tagline && (
+            <motion.p
+              className="mt-6 max-w-2xl text-fluid-lg leading-relaxed text-white/70"
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.32, duration: 0.75, ease: easeOut }}
+            >
+              {project.tagline}
+            </motion.p>
+          )}
         </div>
-      </div>
+      </section>
 
-      {/* ── Main image floating over hero ── */}
-      <div className="content px-4 -mt-20 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.45, duration: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-          className="rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,128,255,0.28)] border border-white/80"
-        >
-          <img src={project.image} alt={project.title} className="w-full object-cover" />
-        </motion.div>
-      </div>
+      {/* ── Cover image floating over the hero ── */}
+      {project.image && (
+        <div className="content relative z-20 -mt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 48, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.42, duration: 0.85, ease: easeOut }}
+            className="overflow-hidden rounded-[1.5rem] border border-line bg-surface"
+            style={{ boxShadow: "var(--shadow-lifted)" }}
+          >
+            <img
+              src={project.image}
+              alt={project.title ? `${project.title} cover` : "Project cover"}
+              loading="eager"
+              className="w-full object-cover"
+            />
+          </motion.div>
+        </div>
+      )}
 
       {/* ══════════════════════════════════════════
           ABOUT — banner + alternating sections
@@ -84,56 +152,51 @@ const ProjectDetail = () => {
         <div>
 
           {/* ── About banner ── */}
-          <div className="mt-16 bg-[#f0f8ff] border-y border-[#0080ff]/10">
-            <div className="content px-4 py-14 sm:py-20">
-              <ScrollReveal>
-                <span className="inline-block text-xs font-bold text-[#0080ff] tracking-widest uppercase bg-white px-3 py-1 rounded-full mb-5 border border-[#0080ff]/15">
-                  About the Project
-                </span>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#132238] leading-tight mb-5">
-                  {project.title}
-                </h2>
-                <div className="w-12 h-1 bg-[#0080ff] rounded-full mb-6" />
+          <section className="section border-y border-line bg-bg-elev">
+            <div className="content">
+              <Reveal>
+                <span className="eyebrow">About the Project</span>
+                <h2 className="section-title mt-4">{project.title}</h2>
+                <div className="mt-6 h-[3px] w-12 rounded-full bg-brand" />
                 {(project.about || project.tagline) && (
-                  <p className="text-[#4a5568] text-base sm:text-xl leading-relaxed max-w-3xl">
+                  <p className="mt-7 max-w-3xl text-fluid-lg leading-relaxed text-fg-muted">
                     {project.about || project.tagline}
                   </p>
                 )}
-              </ScrollReveal>
+              </Reveal>
             </div>
-          </div>
+          </section>
 
           {/* ── The Problem — text LEFT, image RIGHT ── */}
           {project.description && (
-            <section className="py-20 bg-white">
-              <div className="content px-4">
+            <section className="section">
+              <div className="content">
                 <div className={`grid items-center gap-12 lg:gap-16 ${hasScreenshot0 ? "lg:grid-cols-2" : ""}`}>
 
-                  {/* Text */}
-                  <ScrollReveal>
-                    <span className="inline-block text-xs font-bold text-[#0080ff] tracking-widest uppercase bg-[#e8f4fd] px-3 py-1 rounded-full mb-5">
-                      The Problem
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#132238] mb-5 leading-tight">
-                      The Challenge
-                    </h3>
-                    <div className="w-10 h-1 bg-[#0080ff] rounded-full mb-6" />
-                    <p className="text-[#4a5568] text-base sm:text-lg leading-relaxed">
+                  <Reveal>
+                    <span className="eyebrow">The Problem</span>
+                    <h3 className="mt-4 text-fluid-2xl text-fg">The Challenge</h3>
+                    <div className="mt-5 h-[3px] w-10 rounded-full bg-brand" />
+                    <p className="mt-6 text-fluid-base leading-relaxed text-fg-muted">
                       {project.description}
                     </p>
-                  </ScrollReveal>
+                  </Reveal>
 
-                  {/* Image (right) */}
                   {hasScreenshot0 && (
-                    <ScrollReveal delay={0.18}>
-                      <motion.div
-                        whileHover={{ y: -6, scale: 1.01 }}
-                        transition={{ type: "spring", stiffness: 250, damping: 20 }}
-                        className="rounded-2xl overflow-hidden shadow-[0_20px_56px_rgba(0,128,255,0.16)] border border-gray-100"
+                    <Reveal delay={0.16} direction="right">
+                      <TiltCard
+                        max={6}
+                        className="relative overflow-hidden rounded-[1.5rem] border border-line bg-surface"
+                        style={{ boxShadow: "var(--shadow-lifted)" }}
                       >
-                        <img src={project.screenshots[0]} alt="Challenge illustration" className="w-full object-cover" />
-                      </motion.div>
-                    </ScrollReveal>
+                        <img
+                          src={project.screenshots[0]}
+                          alt="Screenshot illustrating the challenge"
+                          loading="lazy"
+                          className="w-full object-cover"
+                        />
+                      </TiltCard>
+                    </Reveal>
                   )}
                 </div>
               </div>
@@ -142,36 +205,35 @@ const ProjectDetail = () => {
 
           {/* ── The Solution — image LEFT, text RIGHT ── */}
           {project.fullDescription && (
-            <section className="py-20 bg-[#f0f8ff]">
-              <div className="content px-4">
+            <section className="section border-y border-line bg-bg-elev">
+              <div className="content">
                 <div className={`grid items-center gap-12 lg:gap-16 ${hasScreenshot1 ? "lg:grid-cols-2" : ""}`}>
 
-                  {/* Image (left) */}
                   {hasScreenshot1 && (
-                    <ScrollReveal delay={0.18}>
-                      <motion.div
-                        whileHover={{ y: -6, scale: 1.01 }}
-                        transition={{ type: "spring", stiffness: 250, damping: 20 }}
-                        className="rounded-2xl overflow-hidden shadow-[0_20px_56px_rgba(0,128,255,0.16)] border border-gray-100"
+                    <Reveal delay={0.16} direction="left">
+                      <TiltCard
+                        max={6}
+                        className="relative overflow-hidden rounded-[1.5rem] border border-line bg-surface"
+                        style={{ boxShadow: "var(--shadow-lifted)" }}
                       >
-                        <img src={project.screenshots[1]} alt="Solution illustration" className="w-full object-cover" />
-                      </motion.div>
-                    </ScrollReveal>
+                        <img
+                          src={project.screenshots[1]}
+                          alt="Screenshot illustrating the solution"
+                          loading="lazy"
+                          className="w-full object-cover"
+                        />
+                      </TiltCard>
+                    </Reveal>
                   )}
 
-                  {/* Text (right) */}
-                  <ScrollReveal>
-                    <span className="inline-block text-xs font-bold text-[#0080ff] tracking-widest uppercase bg-white px-3 py-1 rounded-full mb-5">
-                      The Solution
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#132238] mb-5 leading-tight">
-                      How I solved it
-                    </h3>
-                    <div className="w-10 h-1 bg-[#0080ff] rounded-full mb-6" />
-                    <p className="text-[#4a5568] text-base sm:text-lg leading-relaxed">
+                  <Reveal>
+                    <span className="eyebrow">The Solution</span>
+                    <h3 className="mt-4 text-fluid-2xl text-fg">How I solved it</h3>
+                    <div className="mt-5 h-[3px] w-10 rounded-full bg-brand" />
+                    <p className="mt-6 text-fluid-base leading-relaxed text-fg-muted">
                       {project.fullDescription}
                     </p>
-                  </ScrollReveal>
+                  </Reveal>
 
                 </div>
               </div>
@@ -183,49 +245,53 @@ const ProjectDetail = () => {
 
       {/* ── Key Features ── */}
       {project.features?.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="content px-4">
-            <ScrollReveal>
-              <span className="inline-block text-xs font-bold text-[#0080ff] tracking-widest uppercase bg-[#e8f4fd] px-3 py-1 rounded-full mb-4">
-                Key Features
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#132238] mb-10">What I built</h2>
-            </ScrollReveal>
+        <section className="section">
+          <div className="content">
+            <Reveal>
+              <span className="eyebrow">Key Features</span>
+              <h2 className="section-title mt-4">What I built</h2>
+            </Reveal>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <RevealGroup stagger={0.07} className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {project.features.map((feature, i) => (
-                <ScrollReveal key={i} delay={i * 0.07}>
-                  <motion.div
-                    whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,128,255,0.12)" }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="relative p-6 rounded-2xl border border-gray-100 bg-white overflow-hidden"
+                <RevealItem key={i} className="h-full">
+                  <motion.article
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.28, ease: easeOut }}
+                    className="panel panel-sheen h-full overflow-hidden p-6"
                   >
-                    <span className="absolute -top-1 right-4 text-6xl font-black text-[#0080ff]/6 select-none leading-none pointer-events-none">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-1 right-4 select-none font-display text-6xl font-bold leading-none text-brand/10"
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#0080ff] mb-4" />
-                    <p className="text-[#132238] font-semibold text-sm sm:text-[15px] leading-snug">
+                    <span
+                      aria-hidden="true"
+                      className="mb-5 block h-2.5 w-2.5 rounded-full bg-brand"
+                      style={{ boxShadow: "0 0 0 4px var(--accent-tint)" }}
+                    />
+                    <p className="relative text-fluid-sm font-medium leading-snug text-fg">
                       {feature}
                     </p>
-                  </motion.div>
-                </ScrollReveal>
+                  </motion.article>
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           </div>
         </section>
       )}
 
       {/* ── Tech Stack ── */}
       {project.techStack?.length > 0 && (
-        <section className="py-16 bg-[#f0f8ff]">
-          <div className="content px-4" ref={techRef}>
-            <ScrollReveal>
-              <span className="inline-block text-xs font-bold text-[#0080ff] tracking-widest uppercase bg-white px-3 py-1 rounded-full mb-4">
-                Stack
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#132238] mb-8">Built with</h2>
-            </ScrollReveal>
-            <div className="flex flex-wrap gap-3">
+        <section className="section border-y border-line bg-bg-elev">
+          <div className="content">
+            <Reveal>
+              <span className="eyebrow">Stack</span>
+              <h2 className="section-title mt-4">Built with</h2>
+            </Reveal>
+
+            <div ref={techRef} className="mt-10 flex flex-wrap gap-3">
               {project.techStack.map((tech, i) => (
                 <motion.span
                   key={tech}
@@ -233,7 +299,8 @@ const ProjectDetail = () => {
                   variants={chipVariants}
                   initial="hidden"
                   animate={techInView ? "visible" : "hidden"}
-                  className="bg-white border border-[#0080ff]/25 text-[#0080ff] font-medium px-5 py-2.5 rounded-full text-sm shadow-sm hover:bg-[#0080ff] hover:text-white hover:shadow-md transition-all duration-300 cursor-default"
+                  whileHover={{ y: -3 }}
+                  className="chip chip-accent cursor-default px-4 py-2 text-[0.72rem] hover:border-brand"
                 >
                   {tech}
                 </motion.span>
@@ -244,49 +311,41 @@ const ProjectDetail = () => {
       )}
 
       {/* ── CTA ── */}
-      <div className="bg-gradient-to-br from-[#01579b] to-[#0080ff] py-20 px-4">
-        <div className="content text-center">
-          <ScrollReveal>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Try the App</h2>
-            <p className="text-blue-100 text-base sm:text-lg mb-10">Available on Android and iOS platforms.</p>
+      <section className="section relative overflow-hidden">
+        <Aurora />
+        <div className="content relative z-10 text-center">
+          <Reveal>
+            <span className="eyebrow eyebrow-center">Availability</span>
+            <h2 className="section-title mt-4">Try the App</h2>
+            <p className="section-lead mx-auto mt-5 text-center">
+              Available on Android and iOS platforms.
+            </p>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {isRealLink(project.playStoreLink) ? (
-                <motion.a href={project.playStoreLink} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-3 bg-white text-[#0080ff] font-semibold px-7 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <FontAwesomeIcon icon={faGooglePlay} className="text-xl" />
-                  Google Play
-                </motion.a>
-              ) : (
-                <div className="flex items-center gap-3 bg-white/15 text-white/60 font-semibold px-7 py-4 rounded-xl border border-white/20 cursor-not-allowed">
-                  <FontAwesomeIcon icon={faGooglePlay} className="text-xl" />
-                  Coming to Play Store
-                </div>
-              )}
-
-              {isRealLink(project.appStoreLink) ? (
-                <motion.a href={project.appStoreLink} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-3 bg-white text-[#0080ff] font-semibold px-7 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <FontAwesomeIcon icon={faApple} className="text-xl" />
-                  App Store
-                </motion.a>
-              ) : (
-                <div className="flex items-center gap-3 bg-white/15 text-white/60 font-semibold px-7 py-4 rounded-xl border border-white/20 cursor-not-allowed">
-                  <FontAwesomeIcon icon={faApple} className="text-xl" />
-                  Coming to App Store
-                </div>
-              )}
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <StoreBadge
+                href={project.playStoreLink}
+                icon={faGooglePlay}
+                label="Google Play"
+                pending="Coming to Play Store"
+              />
+              <StoreBadge
+                href={project.appStoreLink}
+                icon={faApple}
+                label="App Store"
+                pending="Coming to App Store"
+              />
             </div>
 
-            <Link to="/" className="text-blue-200 hover:text-white transition-colors duration-200 inline-flex items-center gap-2 group text-sm font-medium">
-              <FontAwesomeIcon icon={faArrowLeft} className="group-hover:-translate-x-1 transition-transform duration-200" />
+            <Link
+              to="/"
+              className="group mt-12 inline-flex items-center gap-2 text-fluid-sm font-medium text-fg-muted hover:text-brand"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="transition-transform duration-200 group-hover:-translate-x-1" />
               Back to all projects
             </Link>
-          </ScrollReveal>
+          </Reveal>
         </div>
-      </div>
+      </section>
 
     </div>
   );

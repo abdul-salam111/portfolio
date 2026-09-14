@@ -1,39 +1,93 @@
 import { useEffect, useState } from "react";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { animateScroll } from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const scrollToTop = () => {
-  animateScroll.scrollToTop(options); /* To Top */
-  //   animateScroll.scrollToBottom(options); /* To Bottom */
-};
+import { animateScroll } from "react-scroll";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { Magnetic } from "../../motion";
 
 const options = {
   duration: 500,
   smooth: true,
 };
 
+const scrollToTop = () => {
+  animateScroll.scrollToTop(options);
+};
+
+const RADIUS = 23;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
 const ScrollToTop = () => {
-  const [position, setPosition] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 28,
+    restDelta: 0.001,
+  });
+  const dashOffset = useTransform(progress, (v) => CIRCUMFERENCE * (1 - v));
 
   useEffect(() => {
-    const handleScroll = () => {
-      setPosition(window.scrollY);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setVisible(window.scrollY > 200);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className="flex justify-end relative  sm:me-10 z-10 transition-all">
-      <a
-        onClick={scrollToTop}
-        className={`fixed bottom-10 me-5 w-10 h-10 sm:w-12.5 sm:h-12.5 lg:w-15 lg:h-15 flex justify-center items-center rounded-full transition delay-150 duration-500 ease-in-out hover:scale-120 hover:cursor-pointer bg-picto-primary hover:bg-picto-primary-dark text-white ${
-          position < 200 && "scale-0"
-        }`}
-      >
-        <FontAwesomeIcon icon={faAngleUp} size="2xl" />
-      </a>
-    </div>
+    <motion.div
+      aria-hidden={!visible}
+      initial={false}
+      animate={visible ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.7, y: 14 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      style={{ pointerEvents: visible ? "auto" : "none" }}
+      className="fixed right-4 bottom-6 z-40 sm:right-8 sm:bottom-10"
+    >
+      <Magnetic strength={0.25}>
+        <button
+          type="button"
+          onClick={scrollToTop}
+          tabIndex={visible ? 0 : -1}
+          aria-label="Back to top"
+          className="glass group relative grid size-12 cursor-pointer place-items-center rounded-full hover:[--border-hairline:var(--accent)] sm:size-14"
+          style={{ boxShadow: "var(--shadow-ambient)" }}
+        >
+          {/* Reading progress, drawn from 12 o'clock by the -90° rotation. */}
+          <svg
+            viewBox="0 0 52 52"
+            aria-hidden="true"
+            className="absolute inset-0 size-full -rotate-90"
+          >
+            {/* Not --border-hairline: the button reassigns that on hover, and
+                the track would inherit it and swallow the progress arc. */}
+            <circle
+              cx="26"
+              cy="26"
+              r={RADIUS}
+              fill="none"
+              stroke="var(--border-strong)"
+              strokeWidth="1.5"
+            />
+            <motion.circle
+              cx="26"
+              cy="26"
+              r={RADIUS}
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeDasharray={CIRCUMFERENCE}
+              style={{ strokeDashoffset: dashOffset }}
+            />
+          </svg>
+          <FontAwesomeIcon
+            icon={faAngleUp}
+            className="relative size-4 text-fg-muted transition-colors duration-200 group-hover:text-brand sm:size-5"
+          />
+        </button>
+      </Magnetic>
+    </motion.div>
   );
 };
 

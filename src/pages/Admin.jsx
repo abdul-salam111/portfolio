@@ -16,6 +16,21 @@ const Admin = () => {
   const [tab, setTab] = useState("projects");
   const [unread, setUnread] = useState(0);
 
+  // The public site is dark by default; the admin panel's markup is built
+  // around light surfaces, so pin the document to the light palette for as
+  // long as this route is mounted and hand it back on the way out.
+  useEffect(() => {
+    const root = document.documentElement;
+    const previous = root.getAttribute("data-theme");
+    const previousScheme = root.style.colorScheme;
+    root.setAttribute("data-theme", "salam-light");
+    root.style.colorScheme = "light";
+    return () => {
+      if (previous) root.setAttribute("data-theme", previous);
+      root.style.colorScheme = previousScheme;
+    };
+  }, []);
+
   // A stored token may have expired while the tab was closed, so validate it
   // against the server rather than trusting its presence.
   useEffect(() => {

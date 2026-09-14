@@ -1,34 +1,47 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 
-const Address = ({ item }) => {
-  const [hover, setHover] = useState(false);
+/**
+ * One contact row. Renders an anchor when `href` is given (email, phone) and a
+ * plain div otherwise (the postal address), so only the actionable rows are
+ * keyboard-reachable.
+ */
+const Address = ({ item, href }) => {
+  const Tag = href ? "a" : "div";
 
   return (
-    <div
-      className="max-w-84 p-3 md:p-3.75 lg:p-6 flex xs:not-odd:my-3 rounded-[10px] bg-white  hover:scale-[1] duration-450  cursor-pointer hover:shadow-[0px_0px_37px_5px_rgba(0,_0,_0,_0.1)] shadow-gray-200 max-sm:mx-auto"
-      /* Scale effect:  */
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+    <Tag
+      {...(href ? { href } : {})}
+      className="group flex items-center gap-4 rounded-xl py-2.5"
     >
-      <div
-        className={`h-10 md:h-12 aspect-square ${hover ? "bg-picto-primary" : "bg-[#e8f4fd]"} center rounded-[4px]`}
-      >
+      <span className="relative center h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-brand/10">
+        {/* Gradient sits on its own layer so it can cross-fade on hover. */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 opacity-0 transition-opacity duration-300 ease-out-quint group-hover:opacity-100"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--violet))",
+          }}
+        />
         <FontAwesomeIcon
           icon={item?.icon}
-          className="text-lg md:text-xl"
-          style={{ color: hover ? "#ffffff" : item?.color }}
+          className="relative text-fluid-base text-brand transition-colors duration-300 group-hover:text-[color:var(--accent-contrast)]"
         />
-      </div>
-      <div className="ms-3.25">
-        <p className="text-[12px] md:text-[14px] text-[#424E60] font-normal">
-          {item?.title}:
-        </p>
-        <p className="text-[14px] md:text-[16px] text-[#132238] font-medium">
+      </span>
+
+      <span className="min-w-0">
+        <span className="block font-mono text-fluid-xs uppercase tracking-[0.18em] text-fg-faint">
+          {item?.title}
+        </span>
+        <span
+          className={`block break-words font-medium text-fg transition-colors duration-300 ${
+            href ? "group-hover:text-brand" : ""
+          }`}
+        >
           {item?.description}
-        </p>
-      </div>
-    </div>
+        </span>
+      </span>
+    </Tag>
   );
 };
 

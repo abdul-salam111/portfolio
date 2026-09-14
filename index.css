@@ -1,75 +1,788 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@plugin "daisyui";
 @plugin "daisyui" {
-  /* No dark styles exist in this app — the layout hardcodes light
-     backgrounds — so daisyUI must not flip on the OS preference. `dark`
-     stays selectable via data-theme if a real dark mode is built later. */
-  themes: light --default, dark, cupcake;
+  themes: false;
 }
 
-* {
-  transition-property: all;
-  transition-timing-function: var(
-    --tw-ease,
-    var(--default-transition-timing-function)
-  );
-  transition-duration: var(--tw-duration, var(--default-transition-duration));
-  --tw-duration: 200ms;
-  transition-duration: 200ms;
+/* ═══════════════════════════════════════════════════════════════════════════
+   daisyUI themes
+   Two hand-tuned palettes drive every daisyUI component (btn, input, menu,
+   dropdown, navbar). The raw design tokens below mirror them for everything
+   that isn't a daisyUI component, so a single `data-theme` swap on <html>
+   repaints the whole site.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@plugin "daisyui/theme" {
+  name: "salam-dark";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #0b111e;
+  --color-base-200: #0f1726;
+  --color-base-300: #161f31;
+  --color-base-content: #e8eef9;
+
+  --color-primary: #3b9eff;
+  --color-primary-content: #04121f;
+  --color-secondary: #7c5cff;
+  --color-secondary-content: #f2efff;
+  --color-accent: #22d3ee;
+  --color-accent-content: #032b33;
+  --color-neutral: #131c2c;
+  --color-neutral-content: #cbd8ea;
+
+  --color-info: #54c5f8;
+  --color-info-content: #04212f;
+  --color-success: #34d399;
+  --color-success-content: #042f21;
+  --color-warning: #fbbf24;
+  --color-warning-content: #2a1c00;
+  --color-error: #fb7185;
+  --color-error-content: #2d0510;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.625rem;
+  --radius-box: 1.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
+
+@plugin "daisyui/theme" {
+  name: "salam-light";
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f4f7fc;
+  --color-base-300: #e6ecf6;
+  --color-base-content: #0b1220;
+
+  --color-primary: #0069d9;
+  --color-primary-content: #ffffff;
+  --color-secondary: #6244e6;
+  --color-secondary-content: #ffffff;
+  --color-accent: #0891b2;
+  --color-accent-content: #ffffff;
+  --color-neutral: #0b1220;
+  --color-neutral-content: #f4f7fc;
+
+  --color-info: #0284c7;
+  --color-info-content: #ffffff;
+  --color-success: #059669;
+  --color-success-content: #ffffff;
+  --color-warning: #b45309;
+  --color-warning-content: #ffffff;
+  --color-error: #e11d48;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.625rem;
+  --radius-box: 1.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Design tokens
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  --breakpoint-xxs: 21.25rem; /* COMMENT: 340px */
-  --breakpoint-xs: 23.125rem; /* COMMENT: 363px */
-  --breakpoint-xxl: 82.5rem; /* COMMENT: 1320px */
-  --color-picto-primary: #0080ff;
-  --color-picto-primary-dark: #01579b;
+  --breakpoint-xxs: 21.25rem; /* 340px */
+  --breakpoint-xs: 23.125rem; /* 363px */
+  --breakpoint-xxl: 82.5rem; /* 1320px */
+
+  --font-display: "Sora", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid type scale — 1.25 ratio, clamped between 360px and 1320px. */
+  --text-fluid-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --text-fluid-sm: clamp(0.8125rem, 0.78rem + 0.16vw, 0.9375rem);
+  --text-fluid-base: clamp(0.9375rem, 0.9rem + 0.19vw, 1.0625rem);
+  --text-fluid-lg: clamp(1.0625rem, 1rem + 0.31vw, 1.25rem);
+  --text-fluid-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-fluid-2xl: clamp(1.5rem, 1.32rem + 0.9vw, 2rem);
+  --text-fluid-3xl: clamp(1.875rem, 1.55rem + 1.6vw, 2.75rem);
+  --text-fluid-4xl: clamp(2.25rem, 1.72rem + 2.6vw, 3.75rem);
+  --text-fluid-5xl: clamp(2.75rem, 1.85rem + 4.5vw, 5.5rem);
+  --text-fluid-6xl: clamp(3.25rem, 1.9rem + 6.7vw, 7rem);
+
+  /* Brand */
+  --color-picto-primary: #3b9eff;
+  --color-picto-primary-dark: #0a7cff;
   --color-flutter-sky: #54c5f8;
   --color-soft-white: #f0f8ff;
-  --color-soft-dark: #546e7a;
+  --color-soft-dark: #97a6bf;
+
+  --color-ink: #060911;
+  --color-violet: #7c5cff;
+
+  /* Semantic aliases — resolved from the runtime tokens below so Tailwind
+     utilities such as `text-fg-muted` follow the active theme. */
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-surface: var(--surface-solid);
+  --color-line: var(--border-hairline);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-fg-muted: var(--text-muted);
+  --color-fg-faint: var(--text-faint);
+  --color-brand: var(--accent);
+  --color-brand-soft: var(--accent-soft);
+  --color-brand-deep: var(--accent-deep);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-aurora: aurora 22s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.6s var(--ease-out-quint) infinite;
+  --animate-marquee-x: marquee-x 38s linear infinite;
+  --animate-grain: grain 8s steps(10) infinite;
 }
 
-.btn-primary {
-  @apply bg-picto-primary border-0 text-white hover:scale-[102%] hover:bg-picto-primary-dark transition-all duration-500;
-}
-body {
-  font-family: "Work Sans", sans-serif;
+/* ── Runtime tokens: dark (default) ───────────────────────────────────────── */
+:root,
+[data-theme="salam-dark"] {
+  --bg: #060911;
+  --bg-elev: #0b111e;
+  --bg-sunken: #03060c;
+  --surface-solid: #0f1726;
+  --surface-veil: rgb(255 255 255 / 0.04);
+  --surface-veil-strong: rgb(255 255 255 / 0.07);
+  --border-hairline: rgb(255 255 255 / 0.09);
+  --border-strong: rgb(255 255 255 / 0.17);
+
+  --text: #e8eef9;
+  --text-muted: #97a6bf;
+  --text-faint: #7b8899;
+
+  --accent: #3b9eff;
+  --accent-soft: #54c5f8;
+  --accent-deep: #0a7cff;
+  --accent-contrast: #04121f;
+  --accent-tint: rgb(59 158 255 / 0.12);
+  --accent-tint-strong: rgb(59 158 255 / 0.22);
+  --glow: rgb(59 158 255 / 0.4);
+
+  --shadow-ambient: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 32px 64px -24px rgb(0 0 0 / 0.75);
+  --shadow-glow: 0 0 0 1px rgb(59 158 255 / 0.22), 0 18px 60px -18px rgb(59 158 255 / 0.4);
+
+  --grain-opacity: 0.04;
+  --mesh-opacity: 1;
+  --scrollbar-track: #0b111e;
+  --scrollbar-thumb: #243247;
 }
 
-.content {
-  @apply max-xxl:w-full xxl:max-w-[1320px] xxl:mx-auto;
+/* ── Runtime tokens: light ────────────────────────────────────────────────── */
+[data-theme="salam-light"] {
+  --bg: #f6f8fc;
+  --bg-elev: #ffffff;
+  --bg-sunken: #eef2f9;
+  --surface-solid: #ffffff;
+  --surface-veil: rgb(11 18 32 / 0.025);
+  --surface-veil-strong: rgb(11 18 32 / 0.05);
+  --border-hairline: rgb(11 18 32 / 0.09);
+  --border-strong: rgb(11 18 32 / 0.18);
+
+  --text: #0b1220;
+  --text-muted: #51637e;
+  --text-faint: #626f81;
+
+  --accent: #0069d9;
+  --accent-soft: #2f9bea;
+  --accent-deep: #0050a8;
+  --accent-contrast: #ffffff;
+  --accent-tint: rgb(0 105 217 / 0.08);
+  --accent-tint-strong: rgb(0 105 217 / 0.16);
+  --glow: rgb(0 105 217 / 0.22);
+
+  --shadow-ambient: 0 1px 2px rgb(11 18 32 / 0.06), 0 12px 28px -14px rgb(11 18 32 / 0.16);
+  --shadow-lifted: 0 2px 4px rgb(11 18 32 / 0.05), 0 32px 64px -28px rgb(11 18 32 / 0.26);
+  --shadow-glow: 0 0 0 1px rgb(0 105 217 / 0.16), 0 18px 50px -20px rgb(0 105 217 / 0.32);
+
+  --grain-opacity: 0.025;
+  --mesh-opacity: 0.75;
+  --scrollbar-track: #eef2f9;
+  --scrollbar-thumb: #c3cfe0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Base
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-base);
+    line-height: 1.65;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  /* The previous global `* { transition: all }` repainted every node on any
+     state change. Scoping it to interactive elements keeps the same feel at a
+     fraction of the cost, and stops it fighting framer-motion transforms. */
+  a,
+  button,
+  summary,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  .btn,
+  .transition-default {
+    transition-property: color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+      backdrop-filter;
+    transition-timing-function: var(--ease-out-quint);
+    transition-duration: 260ms;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Firefox */
+  html {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 99px;
+    border: 3px solid var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Layout + type utilities
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@utility content {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+@utility center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(4.5rem, 9vw, 9rem);
 }
 
 .section-title {
-  @apply md:font-semibold text-3xl sm:text-4xl md:text-5xl font-medium;
+  font-family: var(--font-display);
+  font-size: var(--text-fluid-4xl);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
 }
 
-.center {
-  @apply flex justify-center items-center;
+.section-lead {
+  color: var(--text-muted);
+  font-size: var(--text-fluid-lg);
+  line-height: 1.6;
+  max-width: 46ch;
 }
 
-.introduction-profile-background {
+/* Small monospace label that sits above a section title. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent));
+}
+
+.eyebrow-center::before {
+  display: none;
+}
+
+/* Gradient text — used sparingly, on display headings only. */
+.text-gradient {
+  background: linear-gradient(
+    115deg,
+    var(--text) 8%,
+    var(--accent-soft) 46%,
+    var(--accent) 62%,
+    var(--text) 96%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-sheen 9s var(--ease-out-quint) infinite;
+}
+
+.text-accent-grad {
+  background: linear-gradient(100deg, var(--accent-soft), var(--accent) 45%, var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Highlight behind inline copy, drawn on scroll-in via --hl scale. */
+.bg-highlight {
+  position: relative;
+  white-space: nowrap;
+  padding-inline: 0.18em;
+}
+
+.bg-highlight::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.02em;
+  height: 0.42em;
+  background: linear-gradient(90deg, var(--accent-tint-strong), var(--accent-tint));
+  border-radius: 2px;
+  z-index: -1;
+  transform-origin: left;
+  transform: scaleX(var(--hl, 1));
+  transition: transform 700ms var(--ease-out-expo);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Surfaces
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.glass {
+  /* The veil alone is too sheer to stay neutral: over a saturated photo the
+     backdrop filter tinted the navbar pink. A theme-coloured base plus lower
+     saturation keeps it reading as glass without picking up the subject. */
+  background: color-mix(in srgb, var(--bg-elev) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  border: 1px solid var(--border-hairline);
+}
+
+.panel {
+  position: relative;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-hairline);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-ambient);
+}
+
+/* Hairline sheen along a panel's top edge — reads as a lit bevel in dark mode. */
+.panel-sheen::before {
+  content: "";
+  position: absolute;
+  inset-inline: 12%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+  pointer-events: none;
+}
+
+/* Animated conic border that runs on hover. */
+.border-beam {
+  position: relative;
+  isolation: isolate;
+}
+
+.border-beam::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--beam-angle, 0deg),
+    transparent 0%,
+    var(--accent) 12%,
+    transparent 28%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.border-beam:hover::before {
+  opacity: 1;
+  animation: beam-spin 3.2s linear infinite;
+}
+
+/* Cursor-tracked spotlight. Components set --mx / --my in px. */
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   background: radial-gradient(
-      circle at 12% 100%,
-      #ffe2b0f5 1% 5px,
-      transparent 15%
-    ),
-    /* bottom left */
-      radial-gradient(circle at 95% -15%, #0468d744 5%, transparent 30%),
-    /* top right */
-      radial-gradient(circle at center right, #c4f5e9b2 2%, transparent 35%); /* center right */
-}
-.blog-background {
-  background: radial-gradient(circle at -10% 0%, #0468d744 1%, transparent 25%),
-    radial-gradient(circle at 110% 30%, #c4f5e9b2 5%, transparent 25%);
+    22rem circle at var(--mx, 50%) var(--my, 50%),
+    var(--accent-tint),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
 }
 
-/* TipTap editor placeholder */
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Backgrounds
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--mesh-opacity);
+  z-index: 0;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: var(--animate-grain);
+}
+
+/* Faint technical grid — anchors the dark hero without adding noise. */
+.grid-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--border-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-hairline) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 78%);
+  opacity: 0.6;
+}
+
+/* Section edge fades so bands blend instead of butting together. */
+.fade-top::before,
+.fade-bottom::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 7rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fade-top::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+}
+
+.fade-bottom::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Buttons
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 999px;
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent) 52%, var(--accent-deep));
+  border: 0;
+  color: var(--accent-contrast);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.22) inset, 0 10px 30px -12px var(--glow);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.3) inset, 0 16px 44px -12px var(--glow);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Light sweep on hover. */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgb(255 255 255 / 0.32) 42%,
+    transparent 64%
+  );
+  transform: translateX(-130%);
+  transition: transform 800ms var(--ease-out-expo);
+}
+
+.btn-primary:hover::after {
+  transform: translateX(130%);
+}
+
+.btn-ghost-line {
+  background: var(--surface-veil);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.btn-ghost-line:hover {
+  background: var(--surface-veil-strong);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Small round pill used for tags and meta chips. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-veil);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.chip-accent {
+  border-color: var(--accent-tint-strong);
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Forms
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-hairline);
+  border-radius: 0;
+  padding: 0.85rem 0.1rem;
+  color: var(--text);
+  font-size: var(--text-fluid-base);
+  outline: none;
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+.field:focus {
+  border-bottom-color: var(--accent);
+  outline: none;
+}
+
+.field:focus::placeholder {
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Third-party overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.swiper-pagination-bullet {
+  background-color: var(--text-faint) !important;
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background: linear-gradient(90deg, var(--accent-soft), var(--accent)) !important;
+  opacity: 1;
+  width: 28px;
+  border-radius: 99px;
+  transition: width 0.4s var(--ease-out-expo);
+}
+
 .tiptap p.is-editor-empty:first-child::before {
-  color: #9ca3af;
+  color: var(--text-faint);
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Keyframes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes aurora {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(6%, -8%, 0) scale(1.14); }
+  66% { transform: translate3d(-7%, 5%, 0) scale(0.92); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes text-sheen {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes beam-spin {
+  to { --beam-angle: 360deg; }
+}
+
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  30% { transform: translate(3%, -15%); }
+  50% { transform: translate(12%, 9%); }
+  70% { transform: translate(9%, -4%); }
+  90% { transform: translate(-1%, 12%); }
+}
+
+@keyframes scroll-hint {
+  0% { transform: translateY(-40%); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: translateY(150%); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Reduced motion
+   Kill decorative loops outright; framer-motion is disabled separately by the
+   useReducedMotion hook so transforms never leave elements mid-flight.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .aurora,
+  .grain::before {
+    display: none;
+  }
 }

@@ -1,40 +1,62 @@
 import Projects from "./Projects";
 import { projectData } from "../../data/projectData";
 import { useContent } from "../../services/useContent";
+import { Reveal, RevealGroup, RevealItem } from "../motion";
+
+const GITHUB_URL = "https://github.com/abdul-salam111";
+
+/**
+ * Asymmetric bento on xl: a six-column track where the lead project takes four
+ * and everything after it takes two, so row one reads 4 + 2 and every later row
+ * falls into 2 + 2 + 2 — whatever number of projects the admin publishes.
+ */
+const spanFor = (index) => (index === 0 ? "xl:col-span-4" : "xl:col-span-2");
 
 const Portfolio = () => {
   const projects = useContent("projects", projectData);
 
   return (
-    <div
-      className="content mt-10 md:mt-15 xl:mt-25 mb-10 md:mb-25 max-xxl:p-2"
-      id="portfolio"
-    >
-      <div className="xl:mb-17.5 mb-5">
-        <div className="max-sm:px-2 text-center mx-auto max-w-144.25">
-          <p className="section-title">Portfolio</p>
-          <p className="font-normal text-[18px] max-sm:text-[14px] pt-6 text-gray-400">
-            Here's a selection of my recent work, showcasing my skills in
+    <section id="portfolio" className="section relative">
+      <div className="content">
+        <Reveal className="text-center">
+          <span className="eyebrow eyebrow-center">Selected Work</span>
+          <h2 className="section-title mt-4">Portfolio</h2>
+          <p className="section-lead mx-auto mt-5">
+            Here&rsquo;s a selection of my recent work, showcasing my skills in
             creating user-centric and visually appealing interfaces.
           </p>
-        </div>
-      </div>
-      <div className="mx-auto flex justify-center">
-        <div className="grid xl:grid-cols-3 md:grid-cols-2 gap-6">
-          {projects.map((data, index) => (
-            <Projects data={data} key={data.id ?? index} />
-          ))}
-        </div>
-      </div>
-      <div className="text-center">
-        <a
-          href="#!"
-          className="btn btn-primary py-3 px-6 mt-12.5 text-center text-[16px] font-semibold"
+        </Reveal>
+
+        <RevealGroup
+          className="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-2 xl:grid-cols-6"
+          stagger={0.08}
         >
-          More Project
-        </a>
+          {projects.map((data, index) => (
+            <RevealItem key={data?.id ?? index} className={spanFor(index)}>
+              <Projects data={data} featured={index === 0} />
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <Reveal
+          delay={0.08}
+          className="mt-10 text-center text-fluid-sm text-fg-faint md:mt-12"
+        >
+          <p>
+            Shipped work only — side projects and source live on{" "}
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block py-1 text-brand underline decoration-brand/30 underline-offset-4 transition-colors duration-200 hover:decoration-brand"
+            >
+              GitHub
+            </a>
+            .
+          </p>
+        </Reveal>
       </div>
-    </div>
+    </section>
   );
 };
 

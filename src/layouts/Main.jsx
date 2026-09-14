@@ -2,18 +2,19 @@ import { Outlet } from "react-router-dom";
 import NavBar from "../components/common/navbar/NavBar";
 import Footer from "../components/common/footer/Footer";
 import ScrollToTop from "../components/common/scrollToTop/ScrollToTop";
+import { Cursor, ScrollProgress } from "../components/motion";
 
-const Main = () => {
-  return (
-    <div data-theme={"light"} className="relative">
-      <NavBar />
+const Main = () => (
+  <div className="relative min-h-screen bg-bg text-fg">
+    <ScrollProgress />
+    <Cursor />
+    <NavBar />
+    <main>
       <Outlet />
-      <div className="bg-[#01579b]">
-        <Footer />
-      </div>
-      <ScrollToTop />
-    </div>
-  );
-};
+    </main>
+    <Footer />
+    <ScrollToTop />
+  </div>
+);
 
 export default Main;

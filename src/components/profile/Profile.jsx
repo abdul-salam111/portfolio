@@ -1,74 +1,161 @@
-import person from "../../assets/images/person2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import person from "../../assets/images/person2.png";
 import SocialMedia from "../common/socialMedia/SocialMedia";
+import {
+  CountUp,
+  Magnetic,
+  Parallax,
+  Reveal,
+  RevealGroup,
+  RevealItem,
+  TextReveal,
+} from "../motion";
+
+const metrics = [
+  { value: 90, suffix: "%", label: "crash-free sessions" },
+  { value: 35, suffix: "%", label: "increase in retention" },
+  { value: 40, suffix: "%", label: "fewer post-release bugs" },
+];
+
+const stack = [
+  "Flutter",
+  "Dart",
+  "BLoC",
+  "Provider",
+  "GetX",
+  "Firebase",
+  "REST APIs",
+  "FastAPI",
+  "PostgreSQL",
+  "Clean Architecture",
+];
 
 const Profile = () => {
   return (
-    <div
-      className={`relative mx-4 xxl:mx-0.5 -bottom-20 lg:-bottom-28 z-10 rounded-2xl bg-white drop-shadow-2xl max-xl:mb-5 shadow-white xl:p-28 lg:p-20 md:p-16 sm:p-10 p-4`}
+    <section
       id="profile"
+      className="section relative bg-bg-elev border-y border-line"
     >
-      <div className="flex max-md:flex-col justify-between items-center gap-6">
-        {/* Profile image */}
-        <div className="xxl:max-w-106 w-auto h-auto xxl:max-h-126">
-          <div className="max-w-106 h-117 object-fill overflow-hidden rounded-xl">
-            <img
-              className="bg-soft-white h-[120%] object-cover"
-              src={person}
-              alt=""
-            />
-          </div>
-          {/* Social media section */}
-          <div className="relative bottom-9">
-            <div className="flex justify-center">
-              <div className="px-6 max-w-66 py-3 z-50 text-center bg-white rounded-[4px] center shadow-2xl drop-shadow-2xl shadow-white">
+      <div className="content">
+        <div className="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
+          {/* Image column */}
+          <div className="lg:col-span-5">
+            <div className="relative mx-auto w-full max-w-[24rem] lg:max-w-none">
+              {/* Offset plate — the photo sits proud of it */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 aspect-[4/5] -translate-x-3 -translate-y-3 rounded-3xl border border-brand/30 sm:-translate-x-5 sm:-translate-y-5 lg:-translate-x-7 lg:-translate-y-7"
+                style={{ background: "var(--accent-tint)" }}
+              />
+
+              {/* Travel stays under the plate's smallest offset (12px) so the
+                  plate never slides out from behind the photo. */}
+              <Parallax speed={12} className="relative">
+                <div
+                  className="relative overflow-hidden rounded-3xl border border-line"
+                  style={{ boxShadow: "var(--shadow-lifted)" }}
+                >
+                  <img
+                    src={person}
+                    alt="Abdul Salam, Senior Flutter Developer at Softronix"
+                    loading="lazy"
+                    className="aspect-[4/5] w-full object-cover"
+                  />
+                  {/* Dissolves the photo's hard bottom crop into the section and
+                      gives the social pills below it something to sit against. */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-28"
+                    style={{ background: "linear-gradient(to top, var(--bg-elev), transparent)" }}
+                  />
+                </div>
+              </Parallax>
+
+              {/* Social pills straddle the photo's bottom edge. Kept outside
+                  the Parallax so their blur never rides a scroll transform. */}
+              <div className="relative z-10 -mt-5 flex justify-center">
                 <SocialMedia />
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="max-sm:w-full w-[33rem]">
-          <h2
-            className={`text-2xl xxs:text-3xl sm:text-4xl lg:text-[38px] text-[min(24px,38px)] max-md:text-center font-semibold mb-8`}
-          >
-            Senior Flutter Developer at Softronix
-          </h2>
-          <div
-            className={`text-xs xs:text-[16px] lg:text-lg font-normal max-md:text-center text-soft-dark`}
-          >
-            <p className={``}>
-              I build high-performance, cross-platform mobile applications for
-              Android and iOS using Flutter and Dart. Proficient in BLoC,
-              Provider and GetX state management, RESTful API integration,
-              Firebase services, and clean architecture (MVVM/MVC).
-            </p>
-            <p className="mt-3">
-              Delivered production apps with measurable results — 90%
-              crash-free sessions, 35% increase in user retention, and 40%
-              reduction in post-release bugs.
-            </p>
-          </div>
-          <div className="mt-8 flex max-md:justify-center">
-            <a
-              className="btn xxs:btn-lg px-6 max-xs:px-2 xxs:py-3 btn-primary text-xs xxs:text-[14px] sm:text-[16px]"
-              href="#portfolio"
+          {/* Text column */}
+          <div className="lg:col-span-7">
+            <Reveal>
+              <p className="eyebrow">ABOUT ME</p>
+            </Reveal>
+
+            <TextReveal
+              as="h2"
+              by="word"
+              text="Senior Flutter Developer at Softronix"
+              className="section-title mt-5"
+              // section-title's 1.04 leading clips descenders inside the
+              // per-word clip boxes TextReveal renders.
+              style={{ lineHeight: 1.14 }}
+            />
+
+            <Reveal delay={0.1} className="mt-6 max-w-[62ch] space-y-4">
+              <p className="text-fg-muted text-fluid-base">
+                I build high-performance, cross-platform mobile applications for
+                Android and iOS with Flutter and Dart — fluent in BLoC, Provider
+                and GetX state management, RESTful API integration, Firebase
+                services, and clean architecture (MVVM/MVC).
+              </p>
+              <p className="text-fg-muted text-fluid-base">
+                That architecture work shows up in production. Across the apps
+                I have shipped, it holds under real traffic:
+              </p>
+            </Reveal>
+
+            <RevealGroup
+              stagger={0.08}
+              className="mt-7 grid max-w-[36rem] grid-cols-3 gap-x-4 border-y border-line py-6 sm:gap-x-8"
             >
-              My Projects
-            </a>
-            <a
-              className={`btn xxs:btn-lg px-6 max-xs:px-2 xxs:py-3 hover:border-picto-primary bg-white duration-300 transition-all hover:text-picto-primary  ms-4 text-xs xxs:text-[14px] sm:text-[16px]`}
-              href="https://drive.google.com/file/d/1cLYsYev927G_5q_lwX2gD1h28ww9CXJA/view?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
+              {metrics.map((metric) => (
+                <RevealItem key={metric.label}>
+                  <div className="font-display text-fluid-2xl font-semibold tracking-tight text-fg tabular-nums">
+                    <CountUp value={metric.value} suffix={metric.suffix} />
+                  </div>
+                  <div className="mt-1.5 font-mono text-[0.6875rem] uppercase leading-snug tracking-[0.16em] text-fg-muted sm:text-xs">
+                    {metric.label}
+                  </div>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+
+            <RevealGroup stagger={0.05} className="mt-7 flex flex-wrap gap-2">
+              {stack.map((tech) => (
+                <RevealItem as="span" key={tech} className="chip">
+                  {tech}
+                </RevealItem>
+              ))}
+            </RevealGroup>
+
+            <Reveal
+              delay={0.08}
+              className="mt-9 flex flex-wrap items-center gap-3"
             >
-              <FontAwesomeIcon icon={faDownload} /> Download CV
-            </a>
+              <Magnetic strength={0.24} className="inline-flex">
+                <a className="btn btn-primary btn-lg px-7" href="#portfolio">
+                  My Projects
+                </a>
+              </Magnetic>
+              <a
+                className="btn btn-ghost-line btn-lg gap-2 px-7"
+                href="https://drive.google.com/file/d/1cLYsYev927G_5q_lwX2gD1h28ww9CXJA/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faDownload} className="w-3.5" />
+                Download CV
+              </a>
+            </Reveal>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

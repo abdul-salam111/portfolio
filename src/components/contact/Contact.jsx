@@ -6,64 +6,73 @@ import {
 import Address from "./Address";
 import Form from "./Form";
 import SocialMedia from "../common/socialMedia/SocialMedia";
+import { Aurora, Reveal, RevealGroup, RevealItem } from "../motion";
 
 const addressData = [
   {
     icon: faLocationDot,
     title: "Address",
     description: "Johar Town, Lahore, Pakistan",
-    color: "#EA4335",
   },
   {
     icon: faEnvelope,
     title: "My Email",
     description: "abdulsalam.0302@gmail.com",
-    color: "#0080ff",
+    href: "mailto:abdulsalam.0302@gmail.com",
   },
   {
     icon: faPhone,
     title: "Call Me Now",
     description: "+92 311 530 8116",
-    color: "#34A853",
+    href: "tel:+923115308116",
   },
 ];
 
 const Contact = () => {
   return (
-    <div className="relative -bottom-15 -mt-15 z-10 px-2">
-      <div
-        className="content p-4 md:p-10 lg:p-22 bg-white rounded-2xl shadow-[0px_0px_90px_9px_rgba(0,_0,_0,_0.1)]"
-        id="contact"
-      >
-        <div className="flex flex-col-reverse lg:gap-5 xl:gap-25.75 lg:flex-row justify-between">
-          <div>
+    <section id="contact" className="section relative overflow-hidden">
+      <Aurora />
+
+      <div className="content relative z-10">
+        <Reveal className="panel panel-sheen overflow-hidden p-6 sm:p-10 lg:p-14 xl:p-18">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] lg:gap-14 xl:gap-20">
             <div>
-              <p className="text-[35px] max-lg:hidden font-semibold text-nowrap text-[#132238]">
-                Let’s discuss your Project
-              </p>
-              <p className="text-[12px] xs:text-[14px] sm:text-lg md:text-lg max-lg:text-center pt-4 font-normal text-soft-dark">
-                I'm open to mid-level / senior Flutter roles and freelance
+              <p className="eyebrow">GET IN TOUCH</p>
+
+              <h2 className="section-title mt-5">
+                Let’s discuss your project
+              </h2>
+
+              <p className="section-lead mt-5">
+                I&apos;m open to mid-level / senior Flutter roles and freelance
                 projects. Drop me a line if you have something exciting.
               </p>
+
+              <RevealGroup className="mt-10 flex flex-col gap-1 sm:mt-12" stagger={0.08}>
+                {addressData.map((item) => (
+                  <RevealItem key={item.title}>
+                    <Address item={item} href={item.href} />
+                  </RevealItem>
+                ))}
+              </RevealGroup>
+
+              <div className="mt-10 border-t border-line pt-7">
+                <p className="font-mono text-fluid-xs uppercase tracking-[0.18em] text-fg-faint">
+                  Find me elsewhere
+                </p>
+                <div className="mt-3 flex flex-wrap items-center">
+                  <SocialMedia />
+                </div>
+              </div>
             </div>
-            <div className="my-8.75 sm:max-lg:flex justify-between items-center">
-              {addressData.map((item, index) => (
-                <Address item={item} key={index} />
-              ))}
-            </div>
-            <div className="w-full max-lg:text-center max-md:mb-4">
-              <SocialMedia />
+
+            <div className="lg:pt-1">
+              <Form />
             </div>
           </div>
-          <div className="w-full overflow-y-scroll py-6.5">
-            <p className="text-xl mb-2 xs:text-2xl sm:text-2xl md:text-[38px] font-semibold text-[#132238] lg:hidden text-center">
-              Let’s discuss your Project
-            </p>
-            <Form />
-          </div>
-        </div>
+        </Reveal>
       </div>
-    </div>
+    </section>
   );
 };
 

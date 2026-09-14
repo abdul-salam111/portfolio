@@ -1,7 +1,11 @@
 import Marquee from "react-fast-marquee";
+import { Reveal } from "../motion";
 import { useContent } from "../../services/useContent";
 
 const commonSVGClass = "h-7 sm:h-10 md:h-12";
+
+// Inline so it outranks the `[&_path]:fill-current` rule on the wrapper.
+const knockoutStyle = { fill: "var(--bg)" };
 
 const clientLogos = [
   {
@@ -29,8 +33,11 @@ const clientLogos = [
           <path fill="#B8BCC2" d="M366.199,70.573c-10.667,0-17.07,7.122-17.07,17.503c0,10.399,6.403,17.507,17.07,17.507c10.683,0,17.09-7.107,17.09-17.507C383.289,77.694,376.882,70.573,366.199,70.573 M402.936,122.665h-19.646v-9.112h-0.277c-3.284,4.98-11.532,10.819-21.214,10.819c-20.502,0-34.021-14.797-34.021-35.723c0-19.217,11.955-36.866,31.596-36.866c8.833,0,17.086,2.417,21.927,9.108h0.277V21.29h21.359V122.665z" />
         </g>
           <path fill="#0077B5" d="M557.632,0H434.916c-5.864,0-10.629,4.648-10.629,10.376V133.61c0,5.734,4.765,10.39,10.629,10.39h122.716c5.874,0,10.659-4.655,10.659-10.39V10.376C568.291,4.648,563.506,0,557.632,0z" />
-          <path fill="#FFFFFF" d="M445.638,53.985h21.359v68.722h-21.359V53.985z M456.322,19.825c6.828,0,12.377,5.549,12.377,12.38c0,6.837-5.549,12.386-12.377,12.386c-6.846,0-12.387-5.549-12.387-12.386C443.936,25.375,449.477,19.825,456.322,19.825" />
-          <path fill="#FFFFFF" d="M480.394,53.985h20.485v9.39h0.286c2.852-5.403,9.818-11.099,20.209-11.099c21.628,0,25.621,14.234,25.621,32.736v37.694h-21.344v-33.42c0-7.969-0.146-18.22-11.099-18.22c-11.113,0-12.819,8.681-12.819,17.644v33.996h-21.34V53.985z" />
+          {/* The badge square inherits currentColor like the rest of the mark,
+              so the "in" has to be knocked out in the page colour to stay
+              readable instead of disappearing into a solid block. */}
+          <path style={knockoutStyle} d="M445.638,53.985h21.359v68.722h-21.359V53.985z M456.322,19.825c6.828,0,12.377,5.549,12.377,12.38c0,6.837-5.549,12.386-12.377,12.386c-6.846,0-12.387-5.549-12.387-12.386C443.936,25.375,449.477,19.825,456.322,19.825" />
+          <path style={knockoutStyle} d="M480.394,53.985h20.485v9.39h0.286c2.852-5.403,9.818-11.099,20.209-11.099c21.628,0,25.621,14.234,25.621,32.736v37.694h-21.344v-33.42c0-7.969-0.146-18.22-11.099-18.22c-11.113,0-12.819,8.681-12.819,17.644v33.996h-21.34V53.985z" />
         </g></g></g></g>
       </svg>
     ),
@@ -39,7 +46,9 @@ const clientLogos = [
     key: "amazon",
     name: "Amazon",
     el: (
-      <svg className="w-14 sm:w-20 md:w-28 aspect-square" viewBox="0 0 650 80">
+      // The artwork spans x 89–649 / y 1–195, so the old `0 0 650 80` box cut
+      // off the swoosh and `aspect-square` squashed the rest into a sliver.
+      <svg className={commonSVGClass} viewBox="85 -6 570 208">
         <path d="M 402.46213,152.88634 C 364.76308,180.67353 310.1206,195.499 263.07446,195.499 c -65.9663,0 -125.35289,-24.39849 -170.281138,-64.97793 -3.529868,-3.19103 -0.367119,-7.53982 3.868745,-5.0548 48.486343,28.21077 108.437743,45.18241 170.365863,45.18241 41.76544,0 87.71029,-8.64115 129.95583,-26.5729 6.38201,-2.71096 11.71918,4.17937 5.47837,8.81056" fill="#B8BCC2" />
         <path d="m 418.13478,134.95459 c -4.80065,-6.1561 -31.8536,-2.90862 -43.99636,-1.46843 -3.69932,0.45183 -4.26408,-2.76742 -0.9319,-5.08303 21.54636,-15.16434 56.90159,-10.78729 61.02448,-5.70428 4.12288,5.11127 -1.07308,40.55122 -21.32045,57.46636 -3.10629,2.59798 -6.07138,1.21429 -4.68766,-2.23088 4.54647,-11.35208 14.74076,-36.7954 9.91189,-42.97974" fill="#B8BCC2" />
         <path d="m 374.98559,21.349107 0,-14.740752 c 0,-2.2308798 1.69434,-3.7275435 3.72755,-3.7275435 l 65.99451,0 c 2.11794,0 3.81228,1.5249061 3.81228,3.7275435 l 0,12.622831 c -0.0282,2.117921 -1.8073,4.885342 -4.97008,9.262385 l -34.19741,48.825227 c 12.70756,-0.310612 26.12108,1.58138 37.64259,8.076355 2.59798,1.468422 3.30396,3.614585 3.50163,5.732527 l 0,15.72912 c 0,2.14616 -2.37208,4.65941 -4.85711,3.36043 -20.30384,-10.646108 -47.27208,-11.803906 -69.72208,0.11296 -2.28735,1.24252 -4.68766,-1.24251 -4.68766,-3.38868 l 0,-14.938423 c 0,-2.400313 0.0282,-6.494986 2.42853,-10.137813 l 39.61932,-56.816855 -34.47981,0 c -2.11792,0 -3.81226,-1.496653 -3.81226,-3.699312" fill="#B8BCC2" />
@@ -69,48 +78,77 @@ const clientLogos = [
   },
 ];
 
-const ClientItem = ({ logo, name }) => (
-  <div className="flex flex-col items-center gap-2 px-8 sm:px-12 md:px-16 opacity-50 hover:opacity-90 transition-opacity duration-300">
-    {logo}
-    <span className="text-[10px] sm:text-[11px] font-semibold tracking-widest uppercase text-gray-400 whitespace-nowrap">
-      {name}
-    </span>
-  </div>
-);
+// `fill-current` is a real CSS declaration, so it overrides the hardcoded
+// `fill` presentation attribute baked into each wordmark and lets the marks
+// inherit a themed colour instead of a fixed grey.
+const logoWrapClass =
+  "center shrink-0 px-8 sm:px-12 md:px-16 text-fg-faint opacity-70 grayscale transition-default " +
+  "hover:text-fg hover:opacity-100 hover:grayscale-0 " +
+  "[&_path]:fill-current [&_polygon]:fill-current";
+
+// Remote logos are raster/brand-coloured, so they get knocked back to a flat
+// white mark on the dark theme rather than tinted through currentColor.
+const remoteLogoClass =
+  "h-7 w-auto max-w-36 object-contain sm:h-10 md:h-12 " +
+  "[[data-theme=salam-dark]_&]:brightness-0 [[data-theme=salam-dark]_&]:invert";
+
+// Dissolve the strip into the page at both ends instead of clipping it.
+const edgeFade = "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)";
+
+const ClientItem = ({ logo }) => <div className={logoWrapClass}>{logo}</div>;
 
 const HappyClients = () => {
   // API rows carry a logo URL; the bundled fallbacks are inline SVG elements.
   const clients = useContent("clients", clientLogos);
 
   return (
-    <div className="content py-10 md:py-25 flex flex-col items-center px-2">
-      <div className="max-w-144.25 text-center">
-        <p className="section-title mb-6">Happy Clients</p>
-        <p className="text-[14px] sm:text-lg text-soft-dark font-normal">
-          I've had the pleasure of working with a diverse range of companies,
-          from startups to established brands.
-        </p>
+    <section className="section relative overflow-hidden bg-bg">
+      <div className="content">
+        <Reveal direction="none" duration={0.8} className="mx-auto max-w-[46rem] text-center">
+          <span className="eyebrow eyebrow-center">Trusted by</span>
+          {/* `.section-title` is unlayered, so the size utility needs the
+              important modifier to win over it. */}
+          <h2 className="section-title mt-4 !text-fluid-3xl">Happy clients</h2>
+          <p className="section-lead mx-auto mt-5">
+            I&rsquo;ve had the pleasure of working with a diverse range of
+            companies, from startups to established brands.
+          </p>
+        </Reveal>
       </div>
-      <Marquee pauseOnHover={true} speed={80} className="mt-6 md:mt-10">
-        <div className="flex items-center py-2">
-          {clients.map((item) => (
-            <ClientItem
-              key={item.key ?? item.id}
-              name={item.name}
-              logo={
-                item.el ?? (
-                  <img
-                    src={item.logo}
-                    alt={item.name}
-                    className="h-10 sm:h-12 md:h-14 w-auto max-w-[140px] object-contain"
-                  />
-                )
-              }
-            />
-          ))}
+
+      <Reveal delay={0.1} className="mt-12 md:mt-16">
+        {/* `autoFill` clones the row as many times as it takes to cover the
+            viewport, so the strip is hidden from assistive tech and the names
+            are exposed once in the list below instead of on every copy. */}
+        <div aria-hidden="true" style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}>
+          <Marquee autoFill pauseOnHover speed={45}>
+            <div className="flex items-center py-2">
+              {clients.map((item) => (
+                <ClientItem
+                  key={item.key ?? item.id}
+                  logo={
+                    item.el ?? (
+                      <img
+                        src={item.logo}
+                        alt={item.name}
+                        loading="lazy"
+                        className={remoteLogoClass}
+                      />
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </Marquee>
         </div>
-      </Marquee>
-    </div>
+
+        <ul className="sr-only">
+          {clients.map((item) => (
+            <li key={item.key ?? item.id}>{item.name}</li>
+          ))}
+        </ul>
+      </Reveal>
+    </section>
   );
 };
 

@@ -1,67 +1,34 @@
 import Introduction from "../components/introduction/Introduction";
 import Profile from "../components/profile/Profile";
+import Profession from "../components/profession/Profession";
 import WorkProcess from "../components/workProcess/WorkProcess";
 import Portfolio from "../components/portfolio/Portfolio";
 import WorkTogether from "../components/workTogether/WorkTogether";
-import Blog from "../components/blog/Blog";
-import Profession from "../components/profession/Profession";
 import HappyClients from "../components/happyClients/HappyClients";
 import Testimonial from "../components/testimonial/Testimonial";
+import Blog from "../components/blog/Blog";
 import Contact from "../components/contact/Contact";
-import ScrollReveal from "../components/common/ScrollReveal";
-import "../../index.css";
 
-const Home = () => {
-  return (
-    <div className="relative">
-      <div className="introduction-profile-background">
-        <div className="content">
-          <Introduction />
-          <Profile />
-        </div>
-      </div>
-
-      <ScrollReveal>
-        <div className="bg-soft-white pt-30">
-          <WorkProcess />
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <Portfolio />
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <div className="bg-[#01579b]">
-          <WorkTogether />
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <div className="blog-background">
-          <Blog />
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <div className="bg-soft-white">
-          <Profession />
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <HappyClients />
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <Testimonial />
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <Contact />
-      </ScrollReveal>
-    </div>
-  );
-};
+/**
+ * Each section owns its own <section>, vertical rhythm, background band and
+ * scroll-reveal, so the page is a flat stack with nothing wrapped around it.
+ *
+ * Order follows the pitch: who I am → what I do → how I work → what I've
+ * built → the ask → proof → writing → contact.
+ */
+const Home = () => (
+  <>
+    <Introduction />
+    <Profile />
+    <Profession />
+    <WorkProcess />
+    <Portfolio />
+    <WorkTogether />
+    <HappyClients />
+    <Testimonial />
+    <Blog />
+    <Contact />
+  </>
+);
 
 export default Home;

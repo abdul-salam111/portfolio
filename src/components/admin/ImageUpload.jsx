@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { uploadImage } from "../../services/api";
 
-export default function ImageUpload({ value, onChange, folder = "uploads", label = "Image" }) {
+export default function ImageUpload({ value, onChange, label = "Image" }) {
   const inputRef = useRef(null);
   const [progress, setProgress] = useState(null); // null = idle, 0-100 = uploading
 
