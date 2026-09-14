@@ -1,25 +1,51 @@
 <!doctype html>
-<!-- data-theme pins daisyUI to its light palette. Without it, daisyUI
-     swaps to dark on the OS preference while the app's own hardcoded light
-     backgrounds stay put, which renders input text near-white on white. -->
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/portfolio/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060911" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-        /* Google font - Work Sans */
-    </style>
+    <title>Abdul Salam — Flutter Engineer</title>
+    <meta name="description"
+        content="Senior Flutter developer in Lahore, Pakistan. I build high-performance cross-platform mobile apps for Android and iOS, backed by fast, production-ready FastAPI services." />
 
-    <title>Eng. Abdul Salam</title>
-  <script type="module" crossorigin src="/portfolio/assets/index-Bj1aNErv.js"></script>
-  <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Cd5l5YSB.css">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Abdul Salam — Flutter Engineer" />
+    <meta property="og:description"
+        content="Cross-platform mobile apps that feel native on every device, backed by production-ready APIs." />
+    <meta property="og:image" content="/portfolio/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+
+    <script>
+      // Paint the stored theme before first render, so a dark-mode visitor
+      // never sees a white flash while the React bundle boots.
+      (function () {
+        try {
+          var stored = localStorage.getItem('salam-theme');
+          var light = stored
+            ? stored === 'light'
+            : window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.setAttribute('data-theme', light ? 'salam-light' : 'salam-dark');
+          document.documentElement.style.colorScheme = light ? 'light' : 'dark';
+          document.documentElement.style.backgroundColor = light ? '#f6f8fc' : '#060911';
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'salam-dark');
+        }
+      })();
+    </script>
+  <script type="module" crossorigin src="/portfolio/assets/index-CIf_Ko5F.js"></script>
+  <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DrSmB-Vx.css">
 </head>
 
-<body class="">
+<body>
     <script>
       // Restore path encoded by 404.html for GitHub Pages SPA routing
       (function () {
@@ -35,8 +61,7 @@
         }
       })();
     </script>
-    <div id="root" class=""></div>
-    <script type="module" src="https://unpkg.com/cally"></script>
+    <div id="root"></div>
 </body>
 
 </html>
