@@ -44,6 +44,7 @@ class ProjectBase(CamelModel):
     title: str = Field(min_length=1, max_length=200)
     category: str = ""
     tagline: str = ""
+    about: str = ""
     description: str = ""
     full_description: str = ""
     image: Optional[str] = None
@@ -64,6 +65,7 @@ class ProjectUpdate(CamelModel):
     title: Optional[str] = Field(default=None, min_length=1, max_length=200)
     category: Optional[str] = None
     tagline: Optional[str] = None
+    about: Optional[str] = None
     description: Optional[str] = None
     full_description: Optional[str] = None
     image: Optional[str] = None

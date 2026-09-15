@@ -37,6 +37,7 @@ class Project(Base, TimestampMixin):
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     category: Mapped[str] = mapped_column(String(200), default="", nullable=False)
     tagline: Mapped[str] = mapped_column(String(400), default="", nullable=False)
+    about: Mapped[str] = mapped_column(Text, default="", nullable=False)
     description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     full_description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     image: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

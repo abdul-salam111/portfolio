@@ -5,7 +5,7 @@ import { verifyRequest } from "./auth";
 /** Columns each resource allows a write to touch. Anything else is dropped. */
 export const RESOURCES = {
   projects: [
-    "title", "category", "tagline", "description", "full_description", "image",
+    "title", "category", "tagline", "about", "description", "full_description", "image",
     "screenshots", "tech_stack", "features", "play_store_link", "app_store_link",
     "order", "published",
   ],
