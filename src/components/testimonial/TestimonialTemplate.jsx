@@ -1,5 +1,5 @@
 const avatarStyle = {
-  background: "linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--violet))",
+  background: "var(--grad-accent)",
   color: "var(--accent-contrast)",
 };
 
@@ -11,7 +11,7 @@ const TestimonialTemplate = ({ testimonial }) => {
   const initial = testimonial?.name?.trim().charAt(0).toUpperCase() ?? "";
 
   return (
-    <figure className="panel panel-sheen flex h-full w-full flex-col overflow-hidden px-6 py-10 text-center sm:px-10 sm:py-12 md:px-14 md:py-16">
+    <figure className="glass-panel flex h-full w-full flex-col overflow-hidden px-6 py-10 text-center sm:px-10 sm:py-12 md:px-14 md:py-16">
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -top-10 left-1 select-none font-display text-[9rem] leading-none text-brand/10 sm:left-6 sm:text-[13rem]"

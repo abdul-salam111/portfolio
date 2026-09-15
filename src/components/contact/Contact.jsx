@@ -34,7 +34,7 @@ const Contact = () => {
       <Aurora />
 
       <div className="content relative z-10">
-        <Reveal className="panel panel-sheen overflow-hidden p-6 sm:p-10 lg:p-14 xl:p-18">
+        <Reveal className="glass-panel overflow-hidden p-6 sm:p-10 lg:p-14 xl:p-18">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] lg:gap-14 xl:gap-20">
             <div>
               <p className="eyebrow">GET IN TOUCH</p>

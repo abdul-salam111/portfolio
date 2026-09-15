@@ -248,7 +248,14 @@ const NavBar = () => {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            className="fixed inset-0 z-60 overflow-hidden bg-bg lg:hidden"
+            // Frosted over the page rather than an opaque sheet, so the content
+            // behind stays legible as context — the iOS sheet behaviour.
+            className="fixed inset-0 z-60 overflow-hidden lg:hidden"
+            style={{
+              background: "color-mix(in srgb, var(--bg) 88%, transparent)",
+              backdropFilter: "blur(28px) saturate(1.6)",
+              WebkitBackdropFilter: "blur(28px) saturate(1.6)",
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

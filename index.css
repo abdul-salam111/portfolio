@@ -177,6 +177,22 @@
   --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 32px 64px -24px rgb(0 0 0 / 0.75);
   --shadow-glow: 0 0 0 1px rgb(59 158 255 / 0.22), 0 18px 60px -18px rgb(59 158 255 / 0.4);
 
+  /* Apple-style glass. The tint has to carry most of the surface: a sheerer
+     base lets backdrop-filter pull colour out of whatever is behind it, which
+     is how the navbar ended up pink over a yellow shirt. */
+  /* Filled accent surfaces. Their label is --accent-contrast, so every stop
+     has to carry it: in light mode --accent-soft is only 3:1 against white,
+     which is why light buttons start at --accent instead. */
+  --grad-accent: linear-gradient(135deg, var(--accent-soft), var(--accent) 52%, var(--accent-deep));
+
+  --glass-tint: rgb(15 23 40 / 0.62);
+  --glass-edge: rgb(255 255 255 / 0.13);
+  --glass-specular: rgb(255 255 255 / 0.18);
+  --glass-sheen: rgb(255 255 255 / 0.13);
+  --glass-rim: rgb(255 255 255 / 0.05);
+  --glass-blur: 24px;
+  --glass-sat: 1.8;
+
   --grain-opacity: 0.04;
   --mesh-opacity: 1;
   --scrollbar-track: #0b111e;
@@ -209,6 +225,16 @@
   --shadow-ambient: 0 1px 2px rgb(11 18 32 / 0.06), 0 12px 28px -14px rgb(11 18 32 / 0.16);
   --shadow-lifted: 0 2px 4px rgb(11 18 32 / 0.05), 0 32px 64px -28px rgb(11 18 32 / 0.26);
   --shadow-glow: 0 0 0 1px rgb(0 105 217 / 0.16), 0 18px 50px -20px rgb(0 105 217 / 0.32);
+
+  --grad-accent: linear-gradient(135deg, var(--accent), var(--accent-deep) 55%, #00417f);
+
+  --glass-tint: rgb(255 255 255 / 0.66);
+  --glass-edge: rgb(11 18 32 / 0.08);
+  --glass-specular: rgb(255 255 255 / 0.95);
+  --glass-sheen: rgb(255 255 255 / 0.7);
+  --glass-rim: rgb(11 18 32 / 0.035);
+  --glass-blur: 24px;
+  --glass-sat: 1.8;
 
   --grain-opacity: 0.025;
   --mesh-opacity: 0.75;
@@ -414,22 +440,82 @@
    Surfaces
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ── Glass ──────────────────────────────────────────────────────────────────
+   Reads as a physical pane rather than a blur: a crisp specular line along the
+   top edge, a soft bloom under it, and a faint rim along the bottom, over a
+   saturated backdrop. The specular is drawn with inset shadows rather than a
+   pseudo-element so `.glass` still composes with `.spotlight`, `.border-beam`
+   and `.panel-sheen`, which already own ::before/::after.
+   ─────────────────────────────────────────────────────────────────────────── */
+
 .glass {
-  /* The veil alone is too sheer to stay neutral: over a saturated photo the
-     backdrop filter tinted the navbar pink. A theme-coloured base plus lower
-     saturation keeps it reading as glass without picking up the subject. */
-  background: color-mix(in srgb, var(--bg-elev) 72%, transparent);
-  backdrop-filter: blur(20px) saturate(1.15);
-  -webkit-backdrop-filter: blur(20px) saturate(1.15);
-  border: 1px solid var(--border-hairline);
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 10px 26px -14px var(--glass-sheen),
+    inset 0 -1px 0 0 var(--glass-rim),
+    var(--shadow-ambient);
+}
+
+/* Small controls and pills — less blur so they stay crisp at 40px tall. */
+.glass-thin {
+  --glass-blur: 14px;
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 -1px 0 0 var(--glass-rim);
+}
+
+/* Content-bearing panels: more tint, because body copy has to stay readable
+   over whatever is drifting behind it. */
+.glass-panel {
+  --glass-tint: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+  --glass-blur: 30px;
+  position: relative;
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-edge);
+  border-radius: 1.75rem;
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 14px 34px -20px var(--glass-sheen),
+    inset 0 -1px 0 0 var(--glass-rim),
+    var(--shadow-lifted);
+}
+
+/* The lit look without the cost. backdrop-filter forces a fresh backdrop
+   snapshot every frame, so it must never ride an element that tilts or moves
+   on scroll — these cards get the same specular treatment over an opaque
+   surface instead. */
+.glass-lit {
+  background:
+    linear-gradient(to bottom, var(--glass-sheen) 0%, transparent 35%),
+    var(--surface-solid);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 -1px 0 0 var(--glass-rim),
+    var(--shadow-ambient);
 }
 
 .panel {
   position: relative;
-  background: var(--surface-solid);
-  border: 1px solid var(--border-hairline);
+  background:
+    linear-gradient(to bottom, var(--glass-sheen) 0%, transparent 30%),
+    var(--surface-solid);
+  border: 1px solid var(--glass-edge);
   border-radius: 1.25rem;
-  box-shadow: var(--shadow-ambient);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 -1px 0 0 var(--glass-rim),
+    var(--shadow-ambient);
 }
 
 /* Hairline sheen along a panel's top edge — reads as a lit bevel in dark mode. */
@@ -575,7 +661,7 @@
 .btn-primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--accent-soft), var(--accent) 52%, var(--accent-deep));
+  background: var(--grad-accent);
   border: 0;
   color: var(--accent-contrast);
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.22) inset, 0 10px 30px -12px var(--glow);
@@ -631,8 +717,11 @@
   gap: 0.4em;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid var(--border-hairline);
-  background: var(--surface-veil);
+  border: 1px solid var(--glass-edge);
+  background: var(--glass-tint);
+  backdrop-filter: blur(12px) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-sat));
+  box-shadow: inset 0 1px 0 0 var(--glass-specular);
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 0.6875rem;

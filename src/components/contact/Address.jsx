@@ -20,7 +20,7 @@ const Address = ({ item, href }) => {
           className="absolute inset-0 opacity-0 transition-opacity duration-300 ease-out-quint group-hover:opacity-100"
           style={{
             background:
-              "linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--violet))",
+              "var(--grad-accent)",
           }}
         />
         <FontAwesomeIcon

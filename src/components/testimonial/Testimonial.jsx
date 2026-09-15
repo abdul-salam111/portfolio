@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import TestimonialTemplate from "./TestimonialTemplate";
-import { Magnetic, Reveal } from "../motion";
+import { Aurora, Magnetic, Reveal } from "../motion";
 import { testimonialData } from "../../data/testimonialData";
 import { useContent } from "../../services/useContent";
 import "swiper/css";
@@ -44,8 +44,9 @@ const Testimonial = () => {
   const testimonials = useContent("testimonials", testimonialData);
 
   return (
-    <section className="section relative bg-bg">
-      <div className="content">
+    <section className="section relative overflow-hidden bg-bg">
+      <Aurora />
+      <div className="content relative z-10">
         <Reveal direction="none" duration={0.8} className="mx-auto max-w-[46rem] text-center">
           <span className="eyebrow eyebrow-center">Testimonials</span>
           <h2 className="section-title mt-4">What clients say</h2>

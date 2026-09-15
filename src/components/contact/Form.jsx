@@ -116,7 +116,7 @@ const Form = () => {
               className="center h-16 w-16 rounded-full text-[color:var(--accent-contrast)]"
               style={{
                 background:
-                  "linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--accent-deep))",
+                  "var(--grad-accent)",
                 boxShadow: "var(--shadow-glow)",
               }}
               initial={reduced ? { opacity: 0 } : { scale: 0.4, opacity: 0 }}

@@ -48,7 +48,7 @@ const WorkSteps = ({ data, index = 0, total = 0 }) => {
               className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               style={{
                 background:
-                  "linear-gradient(135deg, var(--accent-soft), var(--accent) 55%, var(--accent-deep))",
+                  "var(--grad-accent)",
               }}
             />
             <svg
