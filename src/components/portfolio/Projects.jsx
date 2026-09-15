@@ -44,7 +44,7 @@ const Projects = ({ data, featured = false }) => {
             content. This keeps the ratio as the base size and grows from it. */}
         <div
           className={`relative grow overflow-hidden ${
-            featured ? "aspect-[16/10]" : "aspect-[3/2]"
+            featured ? "aspect-[16/10]" : "aspect-[4/3]"
           }`}
         >
           <img
