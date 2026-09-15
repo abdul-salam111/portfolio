@@ -36,16 +36,8 @@ const Projects = ({ data, featured = false }) => {
         aria-label={`Open the ${title} case study`}
         className="panel group relative flex h-full flex-col overflow-hidden"
       >
-        {/* The image, not the copy, absorbs the slack when the grid stretches a
-            card to match a taller sibling — otherwise a project with a short
-            blurb ends up with dead space under its text.
-            `grow` rather than `flex-1`: flex-1 sets flex-basis to 0, which
-            would throw away the aspect ratio and collapse the card to its
-            content. This keeps the ratio as the base size and grows from it. */}
         <div
-          className={`relative grow overflow-hidden ${
-            featured ? "aspect-[16/10]" : "aspect-[4/3]"
-          }`}
+          className={`relative overflow-hidden ${featured ? "aspect-[16/9]" : "aspect-[16/10]"}`}
         >
           <img
             src={data?.image}
@@ -60,7 +52,7 @@ const Projects = ({ data, featured = false }) => {
           />
         </div>
 
-        <div className="flex shrink-0 flex-col p-5 sm:p-6">
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {tags.map((tag, i) => (
@@ -80,7 +72,7 @@ const Projects = ({ data, featured = false }) => {
           </h3>
 
           {blurb && (
-            <p className="mt-2 line-clamp-3 text-fluid-sm text-fg-muted">{blurb}</p>
+            <p className="mt-2 line-clamp-2 text-fluid-sm text-fg-muted">{blurb}</p>
           )}
 
           <div className="mt-auto flex items-center gap-2 border-t border-line pt-5 text-fluid-sm font-semibold text-brand">
