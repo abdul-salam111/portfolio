@@ -6,11 +6,21 @@ import { Reveal, RevealGroup, RevealItem } from "../motion";
 const GITHUB_URL = "https://github.com/abdul-salam111";
 
 /**
- * Asymmetric bento on xl: a six-column track where the lead project takes four
- * and everything after it takes two, so row one reads 4 + 2 and every later row
- * falls into 2 + 2 + 2 — whatever number of projects the admin publishes.
+ * Asymmetric bento on a six-column track, sized to how many projects are
+ * actually published. A fixed 4 + 2 lead row only reads as deliberate once
+ * there are enough cards to fill the rows beneath it; with two published
+ * projects it just leaves the second one starved, so small counts split the
+ * track evenly instead.
  */
-const spanFor = (index) => (index === 0 ? "xl:col-span-4" : "xl:col-span-2");
+const spanFor = (index, total) => {
+  if (total === 1) return "xl:col-span-6";
+  if (total === 2 || total === 4) return "xl:col-span-3";
+  if (total === 3) return "xl:col-span-2";
+  return index === 0 ? "xl:col-span-4" : "xl:col-span-2";
+};
+
+/** The wide lead treatment only applies when the layout gives it four columns. */
+const isFeatured = (index, total) => total >= 5 && index === 0;
 
 const Portfolio = () => {
   const projects = useContent("projects", projectData);
@@ -32,8 +42,14 @@ const Portfolio = () => {
           stagger={0.08}
         >
           {projects.map((data, index) => (
-            <RevealItem key={data?.id ?? index} className={spanFor(index)}>
-              <Projects data={data} featured={index === 0} />
+            <RevealItem
+              key={data?.id ?? index}
+              className={spanFor(index, projects.length)}
+            >
+              <Projects
+                data={data}
+                featured={isFeatured(index, projects.length)}
+              />
             </RevealItem>
           ))}
         </RevealGroup>
