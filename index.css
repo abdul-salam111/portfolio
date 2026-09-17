@@ -199,11 +199,11 @@
      Order matters: saturating first and then flattening the contrast throws
      the chroma away again, and the pane goes smoke-grey over a yellow poster.
      Flatten, then put the colour back, then set the level. */
-  --lg-adjust: contrast(0.52) saturate(2.6) brightness(0.62);
-  --lg-veil: rgb(12 19 33 / 0.44);
-  --lg-veil-thin: rgb(14 22 38 / 0.3);
-  --lg-veil-strong: rgb(10 16 28 / 0.6);
-  --lg-veil-sheet: rgb(6 9 17 / 0.72);
+  --lg-adjust: contrast(0.52) saturate(2.6) brightness(0.74);
+  --lg-veil: rgb(12 19 33 / 0.38);
+  --lg-veil-thin: rgb(14 22 38 / 0.26);
+  --lg-veil-strong: rgb(10 16 28 / 0.56);
+  --lg-veil-sheet: rgb(6 9 17 / 0.7);
 
   /* The pane's own body — light pools along the top edge and falls away. */
   --lg-gloss-top: rgb(255 255 255 / 0.1);

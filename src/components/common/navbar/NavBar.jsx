@@ -160,7 +160,7 @@ const NavBar = () => {
           {/* The pill itself: fades in rather than scaling, so the blur stays stable. */}
           <motion.div
             aria-hidden="true"
-            className="glass pointer-events-none absolute inset-0 rounded-full"
+            className="glass glass-pill pointer-events-none absolute inset-0 rounded-full"
             style={{ boxShadow: "var(--shadow-lifted)" }}
             initial={false}
             animate={{ opacity: scrolled ? 1 : 0 }}

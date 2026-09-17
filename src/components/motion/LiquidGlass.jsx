@@ -68,21 +68,33 @@ const axisMap = (axis, band) => {
 };
 
 /*
- * `scale` is the peak displacement in CSS pixels, so it is tuned per size
- * class rather than shared: ±16px of bend reads as a thick bevel on a 1200px
- * panel and as a funhouse mirror on a 40px button.
+ * A lens per *shape*, not per element.
+ *
+ * `feImage` has to stretch one square map across whatever it is given, so a
+ * band expressed as one number lands as 300px down the side of the navbar and
+ * 12px across it — a lens on the caps and nothing anywhere else. Bands are
+ * therefore per axis, and each entry is aimed at a proportion: `round` for
+ * controls that are as tall as they are wide, `pill` for horizontal capsules,
+ * `panel` for large surfaces.
+ *
+ * `scale` is the peak displacement in CSS pixels. ±11px reads as a bevel on a
+ * 44px button and as a funhouse mirror on a 1200px panel, so it is tuned
+ * alongside the bands rather than shared.
  *
  * `aberration` spreads the three channels around that peak. Real glass
  * disperses, and the faint colour fringe along the rim is most of why the
  * enhanced pane looks like a material instead of a filter.
  */
 const LENSES = [
-  // Controls, chips, the cursor. A wide band on a small pane, because at 40px
-  // across there is no room for a subtle one.
-  { id: "lg-lens-sm", band: 0.28, scale: 8, aberration: 0.22 },
+  // Round controls and the cursor — a wide band, because at 40px across there
+  // is no room for a subtle one.
+  { id: "lg-lens-round", bandX: 0.28, bandY: 0.28, scale: 11, aberration: 0.22 },
+  // Capsules: chips, the navbar pill. The vertical band carries the bend and
+  // the horizontal one only has to reach the caps.
+  { id: "lg-lens-pill", bandX: 0.06, bandY: 0.42, scale: 9, aberration: 0.18 },
   // Panels and sheets. Dispersion is skipped: three displacement passes over a
   // surface this size is the one place the cost shows up on scroll.
-  { id: "lg-lens-lg", band: 0.1, scale: 26, aberration: 0 },
+  { id: "lg-lens-panel", bandX: 0.1, bandY: 0.1, scale: 26, aberration: 0 },
 ];
 
 /* Keeps one channel of a displaced pass and drops the rest, so the three
@@ -112,7 +124,7 @@ const Displace = ({ scale, channel }) => (
   </>
 );
 
-const Lens = ({ id, band, scale, aberration }) => (
+const Lens = ({ id, bandX, bandY, scale, aberration }) => (
   /* The filter region is pinned to the border box (`objectBoundingBox`, 0 0
      1 1) so the map, which has no intrinsic placement of its own, lands
      exactly on the pane. That also means the bend may only ever sample
@@ -128,8 +140,8 @@ const Lens = ({ id, band, scale, aberration }) => (
     height="1"
     colorInterpolationFilters="sRGB"
   >
-    <feImage href={axisMap("x", band)} preserveAspectRatio="none" result="map-x" />
-    <feImage href={axisMap("y", band)} preserveAspectRatio="none" result="map-y" />
+    <feImage href={axisMap("x", bandX)} preserveAspectRatio="none" result="map-x" />
+    <feImage href={axisMap("y", bandY)} preserveAspectRatio="none" result="map-y" />
     {/* One channel each, so `screen` just lays them side by side into RG. */}
     <feBlend in="map-x" in2="map-y" mode="screen" result="map" />
 
@@ -179,25 +191,31 @@ const lensSupported = () => {
    these at `/index.css#lg-lens-sm`. Injecting the declarations into the
    document instead is what keeps the reference pointing at the <defs> below. */
 const LENS_RULES = `
-[data-liquid-glass] .glass,
+[data-liquid-glass] .glass {
+  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-round);
+  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-round);
+}
+/* After .glass on purpose — .glass-pill is a modifier on it. */
+[data-liquid-glass] .glass-pill,
 [data-liquid-glass] .glass-thin,
 [data-liquid-glass] .chip {
-  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-sm);
-  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-sm);
-}
-/* Refraction on its own, for things that carry their own colour and only want
-   the bend — the cursor ring. */
-[data-liquid-glass] .glass-lens {
-  -webkit-backdrop-filter: blur(var(--lg-blur)) url(#lg-lens-sm);
-  backdrop-filter: blur(var(--lg-blur)) url(#lg-lens-sm);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-pill);
+  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-pill);
 }
 [data-liquid-glass] .glass-panel,
 [data-liquid-glass] .glass-sheet {
-  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-lg);
-  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-lg);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-panel);
+  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust) url(#lg-lens-panel);
+}
+/* Refraction on its own, for things that bring their own colour and only want
+   the bend — the cursor ring. */
+[data-liquid-glass] .glass-lens {
+  -webkit-backdrop-filter: blur(var(--lg-blur)) url(#lg-lens-round);
+  backdrop-filter: blur(var(--lg-blur)) url(#lg-lens-round);
 }
 @media (prefers-reduced-transparency: reduce) {
   [data-liquid-glass] .glass,
+  [data-liquid-glass] .glass-pill,
   [data-liquid-glass] .glass-thin,
   [data-liquid-glass] .chip,
   [data-liquid-glass] .glass-lens,
