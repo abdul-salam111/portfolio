@@ -194,8 +194,12 @@
      toward mid-grey from both directions — a white poster darkens, the near-
      black page lightens — so the glass keeps roughly its own tone whatever
      scrolls under it, and `brightness()` then places that tone in the dark
-     theme. A plain `brightness()` can only ever do one of those two jobs. */
-  --lg-adjust: saturate(2.2) contrast(0.52) brightness(0.62);
+     theme. A plain `brightness()` can only ever do one of those two jobs.
+
+     Order matters: saturating first and then flattening the contrast throws
+     the chroma away again, and the pane goes smoke-grey over a yellow poster.
+     Flatten, then put the colour back, then set the level. */
+  --lg-adjust: contrast(0.52) saturate(2.6) brightness(0.62);
   --lg-veil: rgb(12 19 33 / 0.44);
   --lg-veil-thin: rgb(14 22 38 / 0.3);
   --lg-veil-strong: rgb(10 16 28 / 0.6);
@@ -260,7 +264,7 @@
   /* Light glass lifts the backdrop instead of dropping it, and the rim
      inverts: a white specular is invisible against a white page, so the
      outline goes dark and the highlight only lights the inner bevel. */
-  --lg-adjust: saturate(1.9) contrast(0.6) brightness(1.24);
+  --lg-adjust: contrast(0.62) saturate(2.1) brightness(1.22);
   --lg-veil: rgb(255 255 255 / 0.46);
   --lg-veil-thin: rgb(255 255 255 / 0.34);
   --lg-veil-strong: rgb(255 255 255 / 0.66);
