@@ -15,7 +15,7 @@ const CarouselButton = ({ label, path, onClick }) => (
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="glass center size-11 rounded-full border-line text-fg hover:text-brand hover:shadow-[var(--shadow-glow)]"
+      className="glass center size-11 rounded-full text-fg hover:text-brand hover:shadow-[var(--shadow-glow)]"
     >
       <svg
         aria-hidden="true"

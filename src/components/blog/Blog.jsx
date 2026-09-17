@@ -20,7 +20,7 @@ const CarouselButton = ({ label, path, disabled, onClick }) => (
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className={`glass center size-11 rounded-full border-line text-fg hover:text-brand hover:shadow-[var(--shadow-glow)] disabled:cursor-not-allowed ${
+      className={`glass center size-11 rounded-full text-fg hover:text-brand hover:shadow-[var(--shadow-glow)] disabled:cursor-not-allowed ${
         disabled ? "opacity-35" : "opacity-100"
       }`}
     >

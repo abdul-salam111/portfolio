@@ -50,7 +50,7 @@ const ScrollToTop = () => {
           onClick={scrollToTop}
           tabIndex={visible ? 0 : -1}
           aria-label="Back to top"
-          className="glass group relative grid size-12 cursor-pointer place-items-center rounded-full hover:[--border-hairline:var(--accent)] sm:size-14"
+          className="glass group relative grid size-12 cursor-pointer place-items-center rounded-full sm:size-14"
           style={{ boxShadow: "var(--shadow-ambient)" }}
         >
           {/* Reading progress, drawn from 12 o'clock by the -90° rotation. */}
@@ -59,8 +59,8 @@ const ScrollToTop = () => {
             aria-hidden="true"
             className="absolute inset-0 size-full -rotate-90"
           >
-            {/* Not --border-hairline: the button reassigns that on hover, and
-                the track would inherit it and swallow the progress arc. */}
+            {/* Not --lg-edge: the glass rim brightens to the accent on hover,
+                and the track would inherit it and swallow the progress arc. */}
             <circle
               cx="26"
               cy="26"

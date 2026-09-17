@@ -46,11 +46,11 @@ const SocialMedia = ({ className = "" }) => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={item.name}
-            /* --social carries the brand colour; overriding --border-hairline
-               locally is how the hover border reaches .glass, whose unlayered
-               `border` shorthand outranks any Tailwind border utility. */
+            /* --social carries the brand colour, and only the icon uses it —
+               the pane's own rim lights up on hover from the shared `.glass`
+               interaction rule, so all four buttons catch the light together. */
             style={{ "--social": item.color }}
-            className="glass group grid size-10 place-items-center rounded-full hover:-translate-y-1 hover:[--border-hairline:var(--accent)] focus-visible:-translate-y-1 sm:size-11"
+            className="glass group grid size-10 place-items-center rounded-full hover:-translate-y-1 focus-visible:-translate-y-1 sm:size-11"
           >
             <FontAwesomeIcon
               icon={item.icon}

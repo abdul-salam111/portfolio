@@ -177,21 +177,50 @@
   --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 32px 64px -24px rgb(0 0 0 / 0.75);
   --shadow-glow: 0 0 0 1px rgb(59 158 255 / 0.22), 0 18px 60px -18px rgb(59 158 255 / 0.4);
 
-  /* Apple-style glass. The tint has to carry most of the surface: a sheerer
-     base lets backdrop-filter pull colour out of whatever is behind it, which
-     is how the navbar ended up pink over a yellow shirt. */
   /* Filled accent surfaces. Their label is --accent-contrast, so every stop
      has to carry it: in light mode --accent-soft is only 3:1 against white,
      which is why light buttons start at --accent instead. */
   --grad-accent: linear-gradient(135deg, var(--accent-soft), var(--accent) 52%, var(--accent-deep));
 
-  --glass-tint: rgb(15 23 40 / 0.62);
-  --glass-edge: rgb(255 255 255 / 0.13);
-  --glass-specular: rgb(255 255 255 / 0.18);
-  --glass-sheen: rgb(255 255 255 / 0.13);
-  --glass-rim: rgb(255 255 255 / 0.05);
-  --glass-blur: 24px;
-  --glass-sat: 1.8;
+  /* ── Liquid glass ─────────────────────────────────────────────────────────
+     Legibility is split across two layers on purpose. `--lg-adjust` darkens
+     and saturates the backdrop itself; `--lg-veil` is a thin wash on top of
+     the result. Carrying it all in the veil — the old 0.62 tint did — paints
+     an opaque slab with nothing left to refract. Carrying it all in the filter
+     leaves white type stranded when a bright photo scrolls under the navbar,
+     which is how the bar once came out pink over a yellow shirt.
+     ─────────────────────────────────────────────────────────────────────── */
+  /* `contrast()` below 1 is what makes the pane adapt. It pulls the backdrop
+     toward mid-grey from both directions — a white poster darkens, the near-
+     black page lightens — so the glass keeps roughly its own tone whatever
+     scrolls under it, and `brightness()` then places that tone in the dark
+     theme. A plain `brightness()` can only ever do one of those two jobs. */
+  --lg-adjust: saturate(2.2) contrast(0.52) brightness(0.62);
+  --lg-veil: rgb(12 19 33 / 0.44);
+  --lg-veil-thin: rgb(14 22 38 / 0.3);
+  --lg-veil-strong: rgb(10 16 28 / 0.6);
+  --lg-veil-sheet: rgb(6 9 17 / 0.72);
+
+  /* The pane's own body — light pools along the top edge and falls away. */
+  --lg-gloss-top: rgb(255 255 255 / 0.1);
+  --lg-gloss-bottom: rgb(255 255 255 / 0.028);
+
+  /* Rim. --lg-edge is the outline; the speculars are stops on the conic
+     highlight riding it, brightest where --lg-angle points. */
+  --lg-edge: rgb(255 255 255 / 0.11);
+  --lg-spec-hi: rgb(255 255 255 / 0.92);
+  --lg-spec-mid: rgb(255 255 255 / 0.26);
+  --lg-spec-lo: rgb(255 255 255 / 0.03);
+
+  /* Thickness — the bevel the eye reads as the depth of the pane. */
+  --lg-bevel: rgb(255 255 255 / 0.24);
+  --lg-bevel-low: rgb(255 255 255 / 0.07);
+  --lg-inner-glow: rgb(255 255 255 / 0.09);
+  --lg-inner-shade: rgb(0 0 0 / 0.42);
+
+  --lg-blur: 13px;
+  --lg-thickness: 13px;
+  --lg-shadow: var(--shadow-ambient);
 
   --grain-opacity: 0.04;
   --mesh-opacity: 1;
@@ -228,13 +257,31 @@
 
   --grad-accent: linear-gradient(135deg, var(--accent), var(--accent-deep) 55%, #00417f);
 
-  --glass-tint: rgb(255 255 255 / 0.66);
-  --glass-edge: rgb(11 18 32 / 0.08);
-  --glass-specular: rgb(255 255 255 / 0.95);
-  --glass-sheen: rgb(255 255 255 / 0.7);
-  --glass-rim: rgb(11 18 32 / 0.035);
-  --glass-blur: 24px;
-  --glass-sat: 1.8;
+  /* Light glass lifts the backdrop instead of dropping it, and the rim
+     inverts: a white specular is invisible against a white page, so the
+     outline goes dark and the highlight only lights the inner bevel. */
+  --lg-adjust: saturate(1.9) contrast(0.6) brightness(1.24);
+  --lg-veil: rgb(255 255 255 / 0.46);
+  --lg-veil-thin: rgb(255 255 255 / 0.34);
+  --lg-veil-strong: rgb(255 255 255 / 0.66);
+  --lg-veil-sheet: rgb(246 248 252 / 0.78);
+
+  --lg-gloss-top: rgb(255 255 255 / 0.62);
+  --lg-gloss-bottom: rgb(255 255 255 / 0.2);
+
+  --lg-edge: rgb(11 18 32 / 0.1);
+  --lg-spec-hi: rgb(255 255 255 / 1);
+  --lg-spec-mid: rgb(255 255 255 / 0.55);
+  --lg-spec-lo: rgb(255 255 255 / 0.12);
+
+  --lg-bevel: rgb(255 255 255 / 0.95);
+  --lg-bevel-low: rgb(11 18 32 / 0.05);
+  --lg-inner-glow: rgb(255 255 255 / 0.5);
+  --lg-inner-shade: rgb(11 18 32 / 0.1);
+
+  --lg-blur: 13px;
+  --lg-thickness: 13px;
+  --lg-shadow: var(--shadow-ambient);
 
   --grain-opacity: 0.025;
   --mesh-opacity: 0.75;
@@ -298,8 +345,8 @@
   .btn,
   .transition-default {
     transition-property: color, background-color, border-color, outline-color,
-      text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-      backdrop-filter;
+      text-decoration-color, fill, stroke, opacity, box-shadow, transform, scale,
+      filter, backdrop-filter;
     transition-timing-function: var(--ease-out-quint);
     transition-duration: 260ms;
   }
@@ -440,93 +487,266 @@
    Surfaces
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Glass ──────────────────────────────────────────────────────────────────
-   Reads as a physical pane rather than a blur: a crisp specular line along the
-   top edge, a soft bloom under it, and a faint rim along the bottom, over a
-   saturated backdrop. The specular is drawn with inset shadows rather than a
-   pseudo-element so `.glass` still composes with `.spotlight`, `.border-beam`
-   and `.panel-sheen`, which already own ::before/::after.
+/* ── Liquid glass ───────────────────────────────────────────────────────────
+   A pane of glass, in four layers:
+
+     1. `backdrop-filter` darkens (or, in light mode, lifts) and saturates what
+        is behind the pane. This is what keeps type legible — not an opaque
+        fill, which would leave nothing to see through.
+     2. `url(#lg-lens-*)` bends that backdrop inside a band along the rim. A
+        blur alone reads as fog; the bend is what reads as a *surface*. Only
+        Chromium runs an SVG filter inside `backdrop-filter`, so the component
+        in motion/LiquidGlass.jsx probes for it and sets `data-liquid-glass` on
+        <html> where it lands. Everything below works without it.
+     3. A thin veil with a vertical falloff gives the pane its own body — light
+        pools at the top edge the way it does in a real slab.
+     4. A masked conic ring draws the specular highlight. `--lg-angle` lives on
+        <html>, so every pane on the page is lit from one direction; that
+        shared light is most of why they read as one material.
+
+   The rim is a pseudo-element rather than an inset shadow because a conic
+   gradient can put the highlight *somewhere* — an inset shadow can only ever
+   light a whole edge evenly, which is the tell of painted-on glass.
    ─────────────────────────────────────────────────────────────────────────── */
 
+@property --lg-angle {
+  syntax: "<angle>";
+  initial-value: 145deg;
+  inherits: true;
+}
+
+@layer components {
+  /* Positioning alone is layered, so `absolute` / `fixed` utilities still beat
+     it — the navbar pill is a `.glass` element pinned to its shell. The rest of
+     the material stays unlayered on purpose: a stray `bg-*` should not be able
+     to dissolve a surface. */
+  .glass,
+  .glass-thin,
+  .glass-panel,
+  .glass-sheet,
+  .glass-lit,
+  .panel,
+  .chip {
+    position: relative;
+  }
+}
+
+/* The transmissive variants share one material and differ only in how much
+   they hide: a chip barely tints, a sheet nearly occludes. */
+.glass,
+.glass-thin,
+.glass-panel,
+.glass-sheet,
+.chip {
+  background-color: var(--lg-veil);
+  background-image: linear-gradient(
+    to bottom,
+    var(--lg-gloss-top) 0%,
+    transparent 46%,
+    transparent 72%,
+    var(--lg-gloss-bottom) 100%
+  );
+  backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) var(--lg-adjust);
+  border: 1px solid var(--lg-edge);
+  box-shadow: var(--lg-bevel-shadow), var(--lg-shadow);
+}
+
+/* Held in a variable so a hover rule can swap the drop shadow without taking
+   the bevel with it — `box-shadow` is one property, and restating four inset
+   layers at every call site is how they drift apart. */
+.glass,
+.glass-thin,
+.glass-panel,
+.glass-sheet,
+.glass-lit,
+.panel,
+.chip {
+  --lg-bevel-shadow:
+    /* lit top edge, half a pixel so it reads as an edge and not a stripe */
+    inset 0 1px 0 -0.5px var(--lg-bevel),
+    /* light bouncing back up off whatever the pane sits on */
+    inset 0 -1px 0 -0.5px var(--lg-bevel-low),
+    /* the body of the glass, glowing inward from the whole rim */
+    inset 0 0 var(--lg-thickness) calc(var(--lg-thickness) / -2) var(--lg-inner-glow),
+    /* contact shade just under the top edge */
+    inset 0 2px 10px -8px var(--lg-inner-shade);
+}
+
 .glass {
-  background: var(--glass-tint);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  border: 1px solid var(--glass-edge);
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 10px 26px -14px var(--glass-sheen),
-    inset 0 -1px 0 0 var(--glass-rim),
-    var(--shadow-ambient);
+  --lg-blur: 13px;
 }
 
-/* Small controls and pills — less blur so they stay crisp at 40px tall. */
+/* Small controls and pills — less blur so they stay crisp at 40px tall, and no
+   drop shadow, since they usually sit inside something that already has one. */
 .glass-thin {
-  --glass-blur: 14px;
-  background: var(--glass-tint);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  border: 1px solid var(--glass-edge);
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 -1px 0 0 var(--glass-rim);
+  --lg-blur: 8px;
+  --lg-veil: var(--lg-veil-thin);
+  --lg-thickness: 8px;
+  --lg-shadow: 0 0 #0000;
 }
 
-/* Content-bearing panels: more tint, because body copy has to stay readable
+/* Content-bearing panels: more veil, because body copy has to stay readable
    over whatever is drifting behind it. */
 .glass-panel {
-  --glass-tint: color-mix(in srgb, var(--surface-solid) 82%, transparent);
-  --glass-blur: 30px;
-  position: relative;
-  background: var(--glass-tint);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  border: 1px solid var(--glass-edge);
+  --lg-blur: 26px;
+  --lg-veil: var(--lg-veil-strong);
+  --lg-thickness: 22px;
+  --lg-shadow: var(--shadow-lifted);
   border-radius: 1.75rem;
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 14px 34px -20px var(--glass-sheen),
-    inset 0 -1px 0 0 var(--glass-rim),
-    var(--shadow-lifted);
+}
+
+/* Full-bleed overlay — the iOS sheet. No rim: a highlight tracing the viewport
+   edge reads as a bug, not a bevel. */
+.glass-sheet {
+  --lg-blur: 32px;
+  --lg-veil: var(--lg-veil-sheet);
+  --lg-thickness: 0px;
+  --lg-shadow: 0 0 #0000;
+  border: 0;
 }
 
 /* The lit look without the cost. backdrop-filter forces a fresh backdrop
    snapshot every frame, so it must never ride an element that tilts or moves
-   on scroll — these cards get the same specular treatment over an opaque
-   surface instead. */
-.glass-lit {
-  background:
-    linear-gradient(to bottom, var(--glass-sheen) 0%, transparent 35%),
-    var(--surface-solid);
-  border: 1px solid var(--glass-edge);
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 -1px 0 0 var(--glass-rim),
-    var(--shadow-ambient);
+   on scroll — these cards get the rim and the bevel over an opaque surface
+   instead, which is enough to keep them in the same family. */
+.glass-lit,
+.panel {
+  background-image: linear-gradient(
+    to bottom,
+    var(--lg-gloss-top) 0%,
+    transparent 34%,
+    transparent 72%,
+    var(--lg-gloss-bottom) 100%
+  );
+  background-color: var(--surface-solid);
+  border: 1px solid var(--lg-edge);
+  box-shadow: var(--lg-bevel-shadow), var(--lg-shadow);
 }
 
 .panel {
-  position: relative;
-  background:
-    linear-gradient(to bottom, var(--glass-sheen) 0%, transparent 30%),
-    var(--surface-solid);
-  border: 1px solid var(--glass-edge);
   border-radius: 1.25rem;
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 -1px 0 0 var(--glass-rim),
-    var(--shadow-ambient);
 }
 
-/* Hairline sheen along a panel's top edge — reads as a lit bevel in dark mode. */
-.panel-sheen::before {
+/* Deepens a `.glass-lit` card's drop shadow on hover. A Tailwind `hover:shadow-*`
+   would replace the whole list and take the bevel with it. */
+.card-lift:hover {
+  box-shadow: var(--lg-bevel-shadow), var(--shadow-lifted);
+}
+
+/* Refraction with no material of its own, for elements that bring their own
+   colour and only want the bend. Unenhanced it is a 1px blur, which is what the
+   cursor ring carried before. */
+.glass-lens {
+  --lg-blur: 1px;
+  backdrop-filter: blur(var(--lg-blur));
+  -webkit-backdrop-filter: blur(var(--lg-blur));
+}
+
+/* ── The rim ────────────────────────────────────────────────────────────────
+   One ring, masked out of a padded box, carrying a conic highlight aimed by
+   the page-wide `--lg-angle`. The secondary lobe at 180° is the bounce light
+   off the surface underneath — glass is lit from both sides, and leaving it
+   out is what makes a rim look like a stroke.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.glass::before,
+.glass-thin::before,
+.glass-panel::before,
+.glass-lit::before,
+.panel::before,
+.chip::before {
   content: "";
   position: absolute;
-  inset-inline: 12%;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: var(--lg-rim-w, 1px);
+  background: conic-gradient(
+    from var(--lg-angle),
+    var(--lg-spec-hi) 0deg,
+    var(--lg-spec-mid) 24deg,
+    var(--lg-spec-lo) 70deg,
+    var(--lg-spec-lo) 148deg,
+    var(--lg-spec-mid) 180deg,
+    var(--lg-spec-lo) 212deg,
+    var(--lg-spec-lo) 290deg,
+    var(--lg-spec-mid) 336deg,
+    var(--lg-spec-hi) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: var(--lg-rim-opacity, 1);
   pointer-events: none;
+  transition: opacity 320ms var(--ease-out-quint);
+}
+
+/* Thicker rim on the big surfaces — a 1px highlight vanishes across 900px. */
+.glass-panel {
+  --lg-rim-w: 1.5px;
+}
+
+.chip {
+  --lg-rim-w: 0.75px;
+  --lg-rim-opacity: 0.75;
+}
+
+/* Brightens a panel's rim. Named for the effect rather than the edge it used
+   to draw, which was a single hairline across the top. */
+.panel-sheen {
+  --lg-spec-hi: color-mix(in srgb, var(--lg-spec-hi) 100%, #fff 30%);
+  --lg-rim-w: 1.25px;
+}
+
+/* ── Interaction ────────────────────────────────────────────────────────────
+   Glass under a finger flexes and catches more light. `scale` rather than
+   `transform`, so it composes with the `translate`-based lift utilities the
+   buttons already carry instead of cancelling them.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:is(a, button, [role="button"]):is(.glass, .glass-thin, .glass-lit):hover {
+  --lg-edge: var(--accent-tint-strong);
+  --lg-inner-glow: var(--accent-tint-strong);
+  --lg-spec-mid: var(--lg-spec-hi);
+}
+
+:is(a, button, [role="button"]):is(.glass, .glass-thin):active {
+  scale: 0.965;
+}
+
+/* ── Fallbacks ──────────────────────────────────────────────────────────────
+   Two ways the material can be unavailable, and they want opposite things:
+   without backdrop-filter the pane has to become opaque or the page shows
+   through raw type; with reduced transparency asked for, it has to become
+   opaque because the reader said so.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-thin,
+  .glass-panel,
+  .glass-sheet,
+  .chip {
+    background-color: var(--surface-solid);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-thin,
+  .glass-panel,
+  .glass-sheet,
+  .chip {
+    background-color: var(--surface-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .glass-sheet {
+    background-color: var(--bg);
+  }
 }
 
 /* Animated conic border that runs on hover. */
@@ -710,18 +930,18 @@
   transform: translateY(-2px);
 }
 
-/* Small round pill used for tags and meta chips. */
+/* Small round pill used for tags and meta chips. The glass itself comes from
+   the shared material up in Surfaces; only the shape and the type live here. */
 .chip {
+  --lg-blur: 8px;
+  --lg-veil: var(--lg-veil-thin);
+  --lg-thickness: 7px;
+  --lg-shadow: 0 0 #0000;
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-tint);
-  backdrop-filter: blur(12px) saturate(var(--glass-sat));
-  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-sat));
-  box-shadow: inset 0 1px 0 0 var(--glass-specular);
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -730,8 +950,9 @@
 }
 
 .chip-accent {
-  border-color: var(--accent-tint-strong);
-  background: var(--accent-tint);
+  --lg-edge: var(--accent-tint-strong);
+  --lg-veil: var(--accent-tint);
+  --lg-spec-hi: var(--lg-spec-mid);
   color: var(--accent);
 }
 

@@ -54,7 +54,10 @@ const Cursor = () => {
       transition={{ duration: 0.25 }}
     >
       <motion.div
-        className="center rounded-full border border-brand/70 bg-brand/10 backdrop-blur-[1px]"
+        /* A real lens: `.glass-lens` bends the page inside the ring where the
+           browser can, so the cursor reads as a lump of glass being dragged
+           over the page rather than a drawn circle. */
+        className="glass-lens center rounded-full border border-brand/70 bg-brand/10"
         style={{ translateX: "-50%", translateY: "-50%" }}
         animate={{
           width: label ? 78 : active ? 46 : 26,

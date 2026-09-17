@@ -7,4 +7,5 @@ export { default as Aurora } from "./Aurora";
 export { default as Parallax } from "./Parallax";
 export { default as ScrollProgress } from "./ScrollProgress";
 export { default as Cursor } from "./Cursor";
+export { default as LiquidGlass } from "./LiquidGlass";
 export { useMotionPrefs, useHasScrolled } from "./useMotionPrefs";
