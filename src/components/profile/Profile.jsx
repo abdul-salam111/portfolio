@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
-import person from "../../assets/images/person2.png";
+import person from "../../assets/about-me-pic.jpg";
 import SocialMedia from "../common/socialMedia/SocialMedia";
 import {
   CountUp,
@@ -60,7 +60,9 @@ const Profile = () => {
                     src={person}
                     alt="Abdul Salam, Senior Flutter Developer at Softronix"
                     loading="lazy"
-                    className="aspect-[4/5] w-full object-cover"
+                    // Framed slightly right of centre so the 4:5 crop keeps
+                    // the outstretched hand inside the frame.
+                    className="aspect-[4/5] w-full object-cover object-[62%_50%]"
                   />
                   {/* Dissolves the photo's hard bottom crop into the section and
                       gives the social pills below it something to sit against. */}

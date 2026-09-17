@@ -137,12 +137,9 @@ const Footer = () => {
           </RevealItem>
         </RevealGroup>
 
-        <div className="mt-14 flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 border-t border-line pt-6">
           <p className="text-fluid-xs text-fg-faint">
             &copy; {copyrightYear} Abdul Salam. All rights reserved.
-          </p>
-          <p className="text-fluid-xs font-mono text-fg-faint">
-            Built with React, Tailwind &amp; Framer Motion
           </p>
         </div>
       </div>
