@@ -1,1 +1,0 @@
-import{t as n}from"./index-DynuEzNN.js";import{f as u}from"./api-BhTicTJ8.js";function l(t,e){const[a,s]=n.useState(e);return n.useEffect(()=>{const r=new AbortController;let o=!0;return u(t,e,r.signal).then(f=>{o&&s(f)}),()=>{o=!1,r.abort()}},[t]),a}export{l as u};
