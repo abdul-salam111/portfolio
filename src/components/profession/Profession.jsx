@@ -33,7 +33,7 @@ const Profession = () => {
             <p className="section-lead mt-6">
               I build complete, production-ready products — cross-platform
               mobile apps with Flutter on the front end and fast, scalable APIs
-              with FastAPI on the back end.
+              with Python and FastAPI on the back end.
             </p>
             <p className="section-lead mt-4">
               From UI to database, third-party integrations to deployment — I

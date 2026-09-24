@@ -26,6 +26,7 @@ const stack = [
   "GetX",
   "Firebase",
   "REST APIs",
+  "Python",
   "FastAPI",
   "PostgreSQL",
   "Clean Architecture",
@@ -100,10 +101,18 @@ const Profile = () => {
 
             <Reveal delay={0.1} className="mt-6 max-w-[62ch] space-y-4">
               <p className="text-fg-muted text-fluid-base">
-                I build high-performance, cross-platform mobile applications for
-                Android and iOS with Flutter and Dart — fluent in BLoC, Provider
-                and GetX state management, RESTful API integration, Firebase
-                services, and clean architecture (MVVM/MVC).
+                With 4+ years of experience, I build high-performance,
+                cross-platform mobile applications for Android and iOS with
+                Flutter and Dart — fluent in BLoC, Provider and GetX state
+                management, RESTful API integration, Firebase services, and
+                clean architecture (MVVM/MVC).
+              </p>
+              <p className="text-fg-muted text-fluid-base">
+                I also write the backends they talk to, in Python and FastAPI:
+                JWT auth, PostgreSQL schemas and migrations, background tasks
+                and auto-generated OpenAPI docs — so the contract between app
+                and server is designed once, by one person, instead of
+                negotiated across two teams.
               </p>
               <p className="text-fg-muted text-fluid-base">
                 That architecture work shows up in production. Across the apps

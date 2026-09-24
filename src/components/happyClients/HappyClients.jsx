@@ -78,19 +78,15 @@ const clientLogos = [
   },
 ];
 
-// `fill-current` is a real CSS declaration, so it overrides the hardcoded
-// `fill` presentation attribute baked into each wordmark and lets the marks
-// inherit a themed colour instead of a fixed grey.
-const logoWrapClass =
-  "center shrink-0 px-8 sm:px-12 md:px-16 text-fg-faint opacity-70 grayscale transition-default " +
-  "hover:text-fg hover:opacity-100 hover:grayscale-0 " +
-  "[&_path]:fill-current [&_polygon]:fill-current";
+// Client marks run in their own brand colours, so the wrapper only handles
+// spacing. Nothing here may touch colour: `grayscale`, an opacity knock-back
+// or `fill-current` would each override what the client supplied.
+const logoWrapClass = "center shrink-0 px-8 sm:px-12 md:px-16";
 
-// Remote logos are raster/brand-coloured, so they get knocked back to a flat
-// white mark on the dark theme rather than tinted through currentColor.
-const remoteLogoClass =
-  "h-7 w-auto max-w-36 object-contain sm:h-10 md:h-12 " +
-  "[[data-theme=salam-dark]_&]:brightness-0 [[data-theme=salam-dark]_&]:invert";
+// Uploaded logos are shown exactly as they were supplied — no theme filter.
+// A mark drawn in white therefore needs a dark-ink version uploaded for the
+// light theme; it cannot be recovered from the white one.
+const remoteLogoClass = "h-7 w-auto max-w-36 object-contain sm:h-10 md:h-12";
 
 // Dissolve the strip into the page at both ends instead of clipping it.
 const edgeFade = "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)";
