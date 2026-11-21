@@ -1,5 +1,5 @@
 import Marquee from "react-fast-marquee";
-import { Reveal } from "../motion";
+import { Aurora, CountUp, Reveal } from "../motion";
 import { useContent } from "../../services/useContent";
 
 const commonSVGClass = "h-7 sm:h-10 md:h-12";
@@ -78,29 +78,77 @@ const clientLogos = [
   },
 ];
 
-// Client marks run in their own brand colours, so the wrapper only handles
-// spacing. Nothing here may touch colour: `grayscale`, an opacity knock-back
-// or `fill-current` would each override what the client supplied.
-const logoWrapClass = "center shrink-0 px-8 sm:px-12 md:px-16";
+// Each logo now sits inside its own card rather than floating loose in the
+// strip — the card may carry background/border freely, but nothing here may
+// touch the logo itself: `grayscale`, an opacity knock-back or `fill-current`
+// would each override what the client supplied.
+const logoCardClass =
+  "chip glass-thin center group relative mx-2.5 h-20 w-44 shrink-0 overflow-hidden rounded-2xl! transition-all duration-300 ease-out-quint hover:-translate-y-1.5 hover:scale-[1.05] hover:shadow-[var(--shadow-ambient)] sm:h-24 sm:w-52";
+
+// Each row's hover glow picks up a different accent so the two strips read
+// as distinct bands rather than one long repeated card.
+const rowGlow = {
+  accent: "radial-gradient(60% 80% at 50% 100%, var(--accent-tint-strong), transparent)",
+  violet: "radial-gradient(60% 80% at 50% 100%, color-mix(in srgb, var(--violet) 55%, transparent), transparent)",
+};
+
+const statChips = [
+  { value: 20, suffix: "+", label: "Companies served" },
+  { value: 4.9, suffix: "★", decimals: 1, label: "Average client rating" },
+  { value: 100, suffix: "%", label: "On-time delivery" },
+];
 
 // Uploaded logos are shown exactly as they were supplied — no theme filter.
 // A mark drawn in white therefore needs a dark-ink version uploaded for the
 // light theme; it cannot be recovered from the white one.
-const remoteLogoClass = "h-7 w-auto max-w-36 object-contain sm:h-10 md:h-12";
+const remoteLogoClass = "h-7 w-auto max-w-28 object-contain sm:h-9 md:h-10";
 
-// Dissolve the strip into the page at both ends instead of clipping it.
+// Dissolve each strip into the page at both ends instead of clipping it.
 const edgeFade = "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)";
 
-const ClientItem = ({ logo }) => <div className={logoWrapClass}>{logo}</div>;
+const ClientItem = ({ logo, glow = "accent" }) => (
+  <div className={logoCardClass}>
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      style={{ background: rowGlow[glow] }}
+    />
+    <span className="relative z-10">{logo}</span>
+  </div>
+);
+
+const clientLogoOf = (item) =>
+  item.el ?? <img src={item.logo} alt={item.name} loading="lazy" className={remoteLogoClass} />;
+
+const clientBlobs = [
+  { color: "var(--accent)", size: "36rem", top: "-20%", left: "70%", opacity: 0.16, delay: "-5s" },
+  { color: "var(--violet)", size: "30rem", top: "60%", left: "-8%", opacity: 0.14, delay: "-12s" },
+];
 
 const HappyClients = () => {
   // API rows carry a logo URL; the bundled fallbacks are inline SVG elements.
   const clients = useContent("clients", clientLogos);
+  // Split into two distinct sets (rather than reusing the same list twice)
+  // so the two rows actually show different logos instead of the same ones
+  // just scrolling the other way. Falls back to sharing the list only when
+  // there are too few clients to split meaningfully.
+  const mid = Math.ceil(clients.length / 2);
+  const topRow = clients.length >= 4 ? clients.slice(0, mid) : clients;
+  const bottomRow = clients.length >= 4 ? clients.slice(mid) : [...clients].reverse();
 
   return (
     <section className="section relative overflow-hidden bg-bg">
-      <div className="content">
+      <Aurora blobs={clientBlobs} grain={false} />
+      <div className="grid-lines" aria-hidden="true" />
+
+      <div className="content relative z-10">
         <Reveal direction="none" duration={0.8} className="mx-auto max-w-[46rem] text-center">
+          <div className="flex justify-center">
+            <span className="chip glass-thin mb-5 inline-flex w-fit items-center gap-2">
+              <span aria-hidden="true">⭐</span>
+              Loved by startups and established brands alike
+            </span>
+          </div>
           <span className="eyebrow eyebrow-center">Trusted by</span>
           {/* `.section-title` is unlayered, so the size utility needs the
               important modifier to win over it. */}
@@ -109,34 +157,67 @@ const HappyClients = () => {
             I&rsquo;ve had the pleasure of working with a diverse range of
             companies, from startups to established brands.
           </p>
+
+          {/* A quick, numeric gut-check on the claim above — counts up once
+              it scrolls into view instead of sitting there as static text. */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {statChips.map((stat) => (
+              <span
+                key={stat.label}
+                className="chip glass-thin flex items-center gap-2 rounded-full px-4 py-2"
+              >
+                <CountUp
+                  value={stat.value}
+                  decimals={stat.decimals ?? 0}
+                  suffix={stat.suffix}
+                  className="font-display text-base font-bold text-fg"
+                />
+                <span className="text-xs text-fg-faint">{stat.label}</span>
+              </span>
+            ))}
+          </div>
         </Reveal>
       </div>
 
-      <Reveal delay={0.1} className="mt-12 md:mt-16">
-        {/* `autoFill` clones the row as many times as it takes to cover the
-            viewport, so the strip is hidden from assistive tech and the names
-            are exposed once in the list below instead of on every copy. */}
-        <div aria-hidden="true" style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}>
-          <Marquee autoFill pauseOnHover speed={45}>
-            <div className="flex items-center py-2">
-              {clients.map((item) => (
-                <ClientItem
-                  key={item.key ?? item.id}
-                  logo={
-                    item.el ?? (
-                      <img
-                        src={item.logo}
-                        alt={item.name}
-                        loading="lazy"
-                        className={remoteLogoClass}
-                      />
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </Marquee>
+      <Reveal delay={0.1} className="relative z-10 mt-12 md:mt-16">
+        {/* Hairlines frame the strip into its own band, echoing the CTA
+            section's treatment instead of letting the logos float loose. */}
+        <span
+          aria-hidden="true"
+          className="mb-8 block h-px w-full bg-[linear-gradient(90deg,transparent,var(--border-strong),transparent)]"
+        />
+
+        <div className="flex flex-col gap-5">
+          {/* `autoFill` clones each row as many times as it takes to cover the
+              viewport, so the strips are hidden from assistive tech and the
+              names are exposed once in the list below instead of on every
+              copy. Opposite directions on each row is what gives the band
+              its criss-crossing feel — the rows themselves stay level. */}
+          <div aria-hidden="true" style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}>
+            <Marquee autoFill pauseOnHover speed={42}>
+              <div className="flex items-center py-2">
+                {topRow.map((item) => (
+                  <ClientItem key={`a-${item.key ?? item.id}`} logo={clientLogoOf(item)} glow="accent" />
+                ))}
+              </div>
+            </Marquee>
+          </div>
+
+          <div aria-hidden="true" style={{ maskImage: edgeFade, WebkitMaskImage: edgeFade }}>
+            <Marquee autoFill pauseOnHover direction="right" speed={30}>
+              <div className="flex items-center py-2">
+                {bottomRow.map((item) => (
+                  <ClientItem key={`b-${item.key ?? item.id}`} logo={clientLogoOf(item)} glow="violet" />
+                ))}
+              </div>
+            </Marquee>
+          </div>
         </div>
+
+        <span
+          aria-hidden="true"
+          className="mt-8 block h-px w-full bg-[linear-gradient(90deg,transparent,var(--border-strong),transparent)]"
+        />
 
         <ul className="sr-only">
           {clients.map((item) => (
