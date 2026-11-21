@@ -37,6 +37,12 @@ const informationSummaryData = [
   },
   {
     id: 3,
+    title: "Web Projects",
+    value: 6,
+    suffix: "+",
+  },
+  {
+    id: 4,
     title: "Happy Clients",
     value: 15,
     suffix: "+",
@@ -160,12 +166,12 @@ const Introduction = () => {
             <RevealGroup
               delay={1.25}
               stagger={0.09}
-              className="mt-12 flex items-start justify-center lg:justify-start"
+              className="mt-12 flex flex-wrap items-start justify-center gap-y-5 lg:flex-nowrap lg:justify-start"
             >
               {informationSummaryData.map((item, i) => (
                 <RevealItem
                   key={item.id}
-                  className={`px-4 sm:px-7 lg:first:pl-0 ${
+                  className={`px-3 sm:px-7 lg:first:pl-0 ${
                     i > 0 ? "border-l border-line" : ""
                   }`}
                 >

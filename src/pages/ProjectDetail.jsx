@@ -171,7 +171,7 @@ const ProjectDetail = () => {
           {project.description && (
             <section className="section">
               <div className="content">
-                <div className={`grid items-center gap-12 lg:gap-16 ${hasScreenshot0 ? "lg:grid-cols-2" : ""}`}>
+                <div className={`grid items-start gap-12 lg:gap-16 ${hasScreenshot0 ? "lg:grid-cols-2" : ""}`}>
 
                   <Reveal>
                     <span className="eyebrow">The Problem</span>
@@ -207,7 +207,7 @@ const ProjectDetail = () => {
           {project.fullDescription && (
             <section className="section border-y border-line bg-bg-elev">
               <div className="content">
-                <div className={`grid items-center gap-12 lg:gap-16 ${hasScreenshot1 ? "lg:grid-cols-2" : ""}`}>
+                <div className={`grid items-start gap-12 lg:gap-16 ${hasScreenshot1 ? "lg:grid-cols-2" : ""}`}>
 
                   {hasScreenshot1 && (
                     <Reveal delay={0.16} direction="left">
