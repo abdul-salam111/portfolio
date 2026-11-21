@@ -27,13 +27,29 @@ const ProjectCard = ({ data, index, total }) => {
         className="h-full w-full object-cover"
       />
 
-      {/* Count, overlaid on the image itself rather than floating above the
-          card as separate page text. */}
+      {/* Count, overlaid in the top-right corner of the image. */}
       <span
         aria-hidden="true"
-        className="chip glass-thin absolute bottom-4 left-4 font-mono text-xs tracking-[0.2em] uppercase"
+        className="chip glass-thin absolute right-4 top-4 font-mono text-xs tracking-[0.2em] uppercase"
       >
         {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </span>
+
+      {/* Case study badge — top-left, paired with the counter at top-right.
+          Bottom-left looked right in isolation, but on shorter viewports the
+          bottom edge of the pinned card can sit right at (or past) the fold,
+          cutting the badge off. The top of the card is always visible since
+          sticky positioning pins it there, so this corner never clips. Solid
+          brand fill rather than the glass treatment so it reads as a clear
+          call-to-action instead of blending into the screenshot behind it. */}
+      <span
+        aria-hidden="true"
+        className="btn btn-primary absolute left-4 top-4 h-auto gap-2 px-4 py-2 text-xs font-semibold shadow-lg"
+      >
+        Case Study
+        <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" />
+        </svg>
       </span>
     </Link>
   );

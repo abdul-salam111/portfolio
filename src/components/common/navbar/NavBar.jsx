@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, animateScroll } from "react-scroll";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { Aurora, Magnetic, useHasScrolled, useMotionPrefs } from "../../motion";
@@ -84,6 +85,8 @@ const MenuIcon = ({ open }) => {
 const NavBar = () => {
   const scrolled = useHasScrolled(40);
   const { reduced } = useMotionPrefs();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [active, setActive] = useState(navItems[0].url);
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -124,6 +127,14 @@ const NavBar = () => {
 
   const goToTop = () => {
     setOpen(false);
+    // The scroll-based nav links only make sense on the home page's own
+    // sections — from any other route (e.g. a project detail page) the
+    // logo needs to navigate back to "/" first, then land at the top.
+    if (location.pathname !== "/") {
+      navigate("/");
+      requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+      return;
+    }
     animateScroll.scrollToTop({ duration: 700, smooth: "easeInOutQuart" });
   };
 
