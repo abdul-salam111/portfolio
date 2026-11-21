@@ -1,0 +1,1 @@
+import{r as t}from"./index-BvjCMG4a.js";import{i as c,f as l}from"./api-BhTicTJ8.js";function m(e,r){const[a,n]=t.useState(r),[i,u]=t.useState(!c());return t.useEffect(()=>{const o=new AbortController;let s=!0;return l(e,r,o.signal).then(f=>{s&&(n(f),u(!0))}),()=>{s=!1,o.abort()}},[e]),[a,i]}export{m as u};
