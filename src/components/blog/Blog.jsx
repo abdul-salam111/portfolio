@@ -39,7 +39,7 @@ const CarouselButton = ({ label, path, disabled, onClick }) => (
 );
 
 const Blog = () => {
-  const blogs = useContent("blogs", blogData);
+  const [blogs] = useContent("blogs", blogData);
   const swiperRef = useRef(null);
   const [edges, setEdges] = useState({ start: true, end: false });
 

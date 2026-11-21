@@ -4,6 +4,7 @@ import Loading from "../components/common/loading/Loading";
 
 const Home = lazy(() => import("../pages/Home"));
 const Main = lazy(() => import("../layouts/Main"));
+const AllProjects = lazy(() => import("../pages/AllProjects"));
 const ProjectDetail = lazy(() => import("../pages/ProjectDetail"));
 const BlogDetail = lazy(() => import("../pages/BlogDetail"));
 const Admin = lazy(() => import("../pages/Admin"));
@@ -31,6 +32,14 @@ export const router = createBrowserRouter(
         {
           path: "/",
           element: <Home />,
+        },
+        {
+          path: "/projects",
+          element: (
+            <Suspense fallback={<Loading />}>
+              <AllProjects />
+            </Suspense>
+          ),
         },
         {
           path: "/project/:id",

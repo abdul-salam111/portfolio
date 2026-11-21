@@ -41,7 +41,7 @@ const swiperVars = {
 
 const Testimonial = () => {
   const swiperRef = useRef(null);
-  const testimonials = useContent("testimonials", testimonialData);
+  const [testimonials] = useContent("testimonials", testimonialData);
 
   return (
     <section

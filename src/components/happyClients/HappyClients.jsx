@@ -127,7 +127,7 @@ const clientBlobs = [
 
 const HappyClients = () => {
   // API rows carry a logo URL; the bundled fallbacks are inline SVG elements.
-  const clients = useContent("clients", clientLogos);
+  const [clients] = useContent("clients", clientLogos);
   // Split into two distinct sets (rather than reusing the same list twice)
   // so the two rows actually show different logos instead of the same ones
   // just scrolling the other way. Falls back to sharing the list only when

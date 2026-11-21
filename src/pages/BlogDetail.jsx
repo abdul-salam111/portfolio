@@ -5,6 +5,7 @@ import { faArrowLeft, faArrowRight, faCalendarDays, faClock, faComment, faTag } 
 import { blogData } from "../data/blogData";
 import { useContent } from "../services/useContent";
 import { Aurora, Magnetic, Reveal } from "../components/motion";
+import Loading from "../components/common/loading/Loading";
 
 const easeOut = [0.16, 1, 0.3, 1];
 
@@ -62,10 +63,16 @@ const isRealLink = (link) => link && link !== "#!";
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const allBlogs = useContent("blogs", blogData);
+  const [allBlogs, ready] = useContent("blogs", blogData);
   const blog = allBlogs.find((b) => String(b.id) === String(id));
 
-  if (!blog) return <Navigate to="/" replace />;
+  if (!blog) {
+    // Same reasoning as the project detail page: a post added after launch
+    // only exists in the live API response, not the bundled fallback, so
+    // don't bounce home until that fetch has actually come back.
+    if (!ready) return <Loading />;
+    return <Navigate to="/" replace />;
+  }
 
   const hasContent = !!blog.content && blog.content !== "<p></p>";
   const tags = Array.isArray(blog.tags) ? blog.tags : [];

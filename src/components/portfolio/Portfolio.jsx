@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import PortfolioStack from "./PortfolioStack";
 import { projectData } from "../../data/projectData";
 import { useContent } from "../../services/useContent";
@@ -5,13 +6,20 @@ import { Aurora, Magnetic, Reveal } from "../motion";
 
 const GITHUB_URL = "https://github.com/abdul-salam111";
 
+// The scroll-pinned stack reads badly once it runs past a handful of slides
+// — this caps the home page to a taste of the work, with the rest living on
+// its own dedicated page behind "View all projects".
+const HOME_PROJECT_LIMIT = 5;
+
 const portfolioBlobs = [
   { color: "var(--accent)", size: "34rem", top: "-6%", left: "68%", opacity: 0.14, delay: "-4s" },
   { color: "var(--violet)", size: "30rem", top: "70%", left: "-6%", opacity: 0.12, delay: "-11s" },
 ];
 
 const Portfolio = () => {
-  const projects = useContent("projects", projectData);
+  const [projects] = useContent("projects", projectData);
+  const featuredProjects = projects.slice(0, HOME_PROJECT_LIMIT);
+  const hasMore = projects.length > HOME_PROJECT_LIMIT;
 
   return (
     // No overflow-hidden here: an overflow-hidden ancestor breaks
@@ -26,7 +34,7 @@ const Portfolio = () => {
           it pins together with the active card as one fixed unit instead of
           scrolling away on its own first. */}
       <PortfolioStack
-        projects={projects}
+        projects={featuredProjects}
         heading={
           <Reveal className="text-center">
             <span className="eyebrow eyebrow-center">Selected Work</span>
@@ -40,7 +48,36 @@ const Portfolio = () => {
       />
 
       <div className="content relative z-10">
-        <Reveal delay={0.08} className="mt-12 flex justify-center md:mt-16">
+        <Reveal
+          delay={0.08}
+          className="mt-12 flex flex-col items-center gap-4 md:mt-16"
+        >
+          {hasMore && (
+            <Magnetic strength={0.24}>
+              <Link
+                to="/projects"
+                data-cursor="View"
+                className="btn btn-primary h-12 gap-2.5 px-7 text-fluid-sm"
+              >
+                View all projects
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  className="shrink-0"
+                >
+                  <path d="M5 12h13M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </Magnetic>
+          )}
+
           <Magnetic strength={0.2}>
             <a
               href={GITHUB_URL}

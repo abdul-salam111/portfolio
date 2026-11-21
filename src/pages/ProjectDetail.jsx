@@ -7,6 +7,7 @@ import { faGooglePlay, faApple } from "@fortawesome/free-brands-svg-icons";
 import { projectData } from "../data/projectData";
 import { useContent } from "../services/useContent";
 import { Aurora, Magnetic, Reveal, RevealGroup, RevealItem, TiltCard } from "../components/motion";
+import Loading from "../components/common/loading/Loading";
 
 const easeOut = [0.16, 1, 0.3, 1];
 
@@ -56,12 +57,20 @@ const StoreBadge = ({ href, icon, label, pending }) =>
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const allProjects = useContent("projects", projectData);
+  const [allProjects, ready] = useContent("projects", projectData);
   const project = allProjects.find((p) => String(p.id) === String(id));
   const techRef = useRef(null);
   const techInView = useInView(techRef, { once: true, margin: "-50px 0px" });
 
-  if (!project) return <Navigate to="/" replace />;
+  if (!project) {
+    // The bundled fallback only carries the original demo projects — a
+    // project added later only exists in the live API response, which
+    // resolves a moment after this first render. Only redirect home once
+    // that live fetch has actually come back empty-handed for this id,
+    // instead of bouncing away while it's still in flight.
+    if (!ready) return <Loading />;
+    return <Navigate to="/" replace />;
+  }
 
   const categories = project.category?.split(" · ") ?? [];
   const hasScreenshot0 = !!project.screenshots?.[0];
