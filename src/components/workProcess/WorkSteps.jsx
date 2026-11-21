@@ -21,7 +21,7 @@ const WorkSteps = ({ data, index = 0 }) => {
       {/* Card — pinned above the spine on even steps, below it on odd ones.
           A fixed lg height keeps the stem math below exact. */}
       <div
-        className={`panel panel-sheen group static flex flex-col gap-3 rounded-[1.25rem] p-6 transition-transform duration-300 ease-[var(--ease-out-quint)] hover:-translate-y-1 lg:absolute lg:inset-x-0 lg:h-[13rem] ${
+        className={`panel panel-sheen group static flex flex-col gap-3 rounded-[1.25rem] p-6 transition-transform duration-300 ease-[var(--ease-out-quint)] hover:-translate-y-1 lg:absolute lg:inset-x-0 lg:h-[15rem] ${
           isEven ? "lg:top-0" : "lg:bottom-0"
         }`}
       >
@@ -58,16 +58,14 @@ const WorkSteps = ({ data, index = 0 }) => {
           </span>
         </div>
 
-        <p className="relative line-clamp-4 text-sm text-fg-muted lg:line-clamp-4">
-          {data?.description}
-        </p>
+        <p className="relative text-sm text-fg-muted">{data?.description}</p>
       </div>
 
       {/* Stem — ties the card's near edge to the node on the spine. */}
       <span
         aria-hidden="true"
         className={`hidden h-8 w-px -translate-x-1/2 bg-line-strong lg:absolute lg:left-1/2 lg:block ${
-          isEven ? "lg:top-[13rem]" : "lg:bottom-[13rem]"
+          isEven ? "lg:top-[15rem]" : "lg:bottom-[15rem]"
         }`}
       />
 

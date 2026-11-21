@@ -120,7 +120,7 @@ const ServiceShowcase = ({ roles, active: controlledActive, onSelect }) => {
       {/* Active service detail — flex-1 so it stretches to match the sticky
           intro column instead of leaving dead space below a short card. */}
       <TiltCard max={3} scale={1.006} className="mt-5 flex-1 rounded-[1.75rem]">
-        <div className="panel panel-sheen relative flex h-full flex-col overflow-hidden rounded-[1.75rem] p-7 sm:p-9">
+        <div className="panel panel-sheen relative flex h-full min-h-[22rem] flex-col overflow-hidden rounded-[1.75rem] p-7 sm:p-9">
           {/* Diagonal accent wash — the "funky" bit, swaps tone per tab. */}
           <div
             aria-hidden="true"

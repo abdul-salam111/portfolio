@@ -43,7 +43,7 @@ const WorkProcess = () => {
       className="section relative border-t border-line"
       // The previous section (Services) already carries its own bottom
       // padding, so the default top padding here stacked with it into a gap.
-      style={{ paddingTop: "clamp(2rem, 4vw, 3.5rem)" }}
+      style={{ paddingTop: "clamp(3rem, 5vw, 4.5rem)" }}
     >
       <div className="content">
         <Reveal className="mx-auto max-w-[46rem] text-center">
@@ -59,7 +59,7 @@ const WorkProcess = () => {
             alternate above/below a central spine, each tethered to it by a
             short stem — reads as a journey, not a form. Collapses to a
             plain stacked list below lg, where there's no room to zig-zag. */}
-        <div className="relative mt-16 lg:mt-28 lg:h-[33rem]">
+        <div className="relative mt-16 lg:mt-28 lg:h-[37rem]">
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px -translate-y-1/2 lg:block"
@@ -71,7 +71,7 @@ const WorkProcess = () => {
 
           <RevealGroup
             role="list"
-            className="grid gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-4 lg:gap-3"
+            className="grid gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-4 lg:gap-1.5"
             stagger={0.12}
           >
             {workStepData.map((data, index) => (

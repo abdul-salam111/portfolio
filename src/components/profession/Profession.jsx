@@ -50,7 +50,7 @@ const Profession = () => {
       // The sections before and after this one (About, Work Process) each
       // carry their own padding too, so the default padding here stacked
       // with both into visible gaps above and below.
-      style={{ paddingBlock: "clamp(2rem, 4vw, 3.5rem)" }}
+      style={{ paddingBlock: "clamp(3rem, 5vw, 4.5rem)" }}
     >
       {/* Soft decorative glow behind the heading — purely atmospheric. */}
       <div
