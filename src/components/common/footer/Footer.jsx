@@ -73,9 +73,9 @@ const Footer = () => {
             </a>
 
             <p className="text-fluid-sm mt-5 max-w-[44ch] text-fg-muted">
-              Senior Flutter developer with 4+ years building polished
-              cross-platform apps and the Python &amp; FastAPI backends behind
-              them.
+              Full-stack developer with 4+ years building polished apps with
+              Flutter, web apps with React, and the Python &amp; Flask backends
+              behind both.
             </p>
 
             <SocialMedia className="mt-7" />

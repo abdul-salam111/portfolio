@@ -35,8 +35,8 @@ const informationSummaryData = [
 // Decorative badges pinned to the portrait frame's edges.
 const techBadges = [
   { label: "Flutter", position: "top-[13%] left-0 sm:-left-5", delay: "-0.6s" },
-  { label: "Dart", position: "top-[47%] right-0 sm:-right-5", delay: "-2.9s" },
-  { label: "FastAPI", position: "top-[72%] left-0 sm:-left-5", delay: "-1.8s" },
+  { label: "React", position: "top-[47%] right-0 sm:-right-5", delay: "-2.9s" },
+  { label: "Flask", position: "top-[72%] left-0 sm:-left-5", delay: "-1.8s" },
   { label: "Firebase", position: "-bottom-4 left-[10%]", delay: "-4.9s" },
 ];
 
@@ -66,7 +66,7 @@ const Introduction = () => {
             <Reveal delay={0.3} duration={0.6} distance={14} className="mt-6">
               {/* The leading rule only reads correctly when the label is left-aligned. */}
               <p className="eyebrow [&::before]:hidden lg:[&::before]:block">
-                Flutter &amp; FastAPI Engineer · Lahore, PK
+                Full-Stack Developer · Flutter, React &amp; Python · Lahore, PK
               </p>
             </Reveal>
 
@@ -95,11 +95,13 @@ const Introduction = () => {
 
             <Reveal delay={0.95} className="mt-7 max-w-[52ch]">
               <p className="text-fluid-lg text-fg-muted">
-                I’m a <span className="bg-highlight">Flutter Developer</span> with{" "}
+                I’m a <span className="bg-highlight">Full-Stack Developer</span> with{" "}
                 <span className="bg-highlight">4+ years</span> of experience building
-                high-performance cross-platform mobile apps for Android and iOS —
-                and the <span className="bg-highlight">Python &amp; FastAPI</span>{" "}
-                backends behind them. Based in Lahore, Pakistan.
+                cross-platform mobile apps with{" "}
+                <span className="bg-highlight">Flutter</span>, modern web apps with{" "}
+                <span className="bg-highlight">React</span>, and the{" "}
+                <span className="bg-highlight">Python &amp; Flask</span> backends
+                behind both. Based in Lahore, Pakistan.
               </p>
             </Reveal>
 
@@ -172,7 +174,7 @@ const Introduction = () => {
               <div className="panel panel-sheen overflow-hidden rounded-[2rem]! p-2">
                 <img
                   src={person}
-                  alt="Abdul Salam, Flutter and FastAPI engineer"
+                  alt="Abdul Salam, full-stack developer — Flutter, React and Python/Flask"
                   width={536}
                   height={636}
                   className="aspect-[536/636] w-full rounded-[1.6rem] object-cover"

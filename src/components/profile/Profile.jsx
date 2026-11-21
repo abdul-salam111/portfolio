@@ -21,13 +21,16 @@ const metrics = [
 const stack = [
   "Flutter",
   "Dart",
+  "React",
+  "Redux",
+  "JavaScript",
+  "HTML/CSS",
   "BLoC",
   "Provider",
-  "GetX",
   "Firebase",
   "REST APIs",
   "Python",
-  "FastAPI",
+  "Flask",
   "PostgreSQL",
   "Clean Architecture",
 ];
@@ -59,7 +62,7 @@ const Profile = () => {
                 >
                   <img
                     src={person}
-                    alt="Abdul Salam, Senior Flutter Developer at Softronix"
+                    alt="Abdul Salam, Full-Stack Developer at Softronix"
                     loading="lazy"
                     // Framed slightly right of centre so the 4:5 crop keeps
                     // the outstretched hand inside the frame.
@@ -92,7 +95,7 @@ const Profile = () => {
             <TextReveal
               as="h2"
               by="word"
-              text="Senior Flutter Developer at Softronix"
+              text="Full-Stack Developer at Softronix"
               className="section-title mt-5"
               // section-title's 1.04 leading clips descenders inside the
               // per-word clip boxes TextReveal renders.
@@ -101,18 +104,18 @@ const Profile = () => {
 
             <Reveal delay={0.1} className="mt-6 max-w-[62ch] space-y-4">
               <p className="text-fg-muted text-fluid-base">
-                With 4+ years of experience, I build high-performance,
-                cross-platform mobile applications for Android and iOS with
-                Flutter and Dart — fluent in BLoC, Provider and GetX state
+                With 4+ years of experience, I build both sides of the
+                product: cross-platform mobile apps for Android and iOS with
+                Flutter and Dart — fluent in BLoC and Provider state
                 management, RESTful API integration, Firebase services, and
-                clean architecture (MVVM/MVC).
+                clean architecture (MVVM/MVC) — and responsive, component-driven
+                web apps with React.
               </p>
               <p className="text-fg-muted text-fluid-base">
-                I also write the backends they talk to, in Python and FastAPI:
-                JWT auth, PostgreSQL schemas and migrations, background tasks
-                and auto-generated OpenAPI docs — so the contract between app
-                and server is designed once, by one person, instead of
-                negotiated across two teams.
+                I also write the backends both talk to, in Python and Flask:
+                JWT auth, PostgreSQL schemas and migrations, and REST APIs
+                designed once, by one person, instead of negotiated across
+                two teams.
               </p>
               <p className="text-fg-muted text-fluid-base">
                 That architecture work shows up in production. Across the apps

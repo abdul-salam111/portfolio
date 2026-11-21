@@ -10,15 +10,21 @@ const rolesData = [
   },
   {
     id: 2,
-    title: "Backend Development with FastAPI",
+    title: "Web Development with React",
     description:
-      "I design and build fast, production-ready REST APIs using Python and FastAPI — with JWT auth, database integration (PostgreSQL/SQLite), background tasks, and auto-generated OpenAPI docs.",
+      "I build fast, responsive, component-driven web apps and dashboards with React, JavaScript and modern tooling — from landing pages to full client portals with clean, maintainable UI.",
   },
   {
     id: 3,
+    title: "Backend Development with Flask",
+    description:
+      "I design and build production-ready REST APIs using Python and Flask — with JWT auth, database integration (PostgreSQL/SQLite), and clean, versioned endpoints that serve both mobile and web clients.",
+  },
+  {
+    id: 4,
     title: "Third-Party & API Integration",
     description:
-      "I integrate payment gateways, Firebase services (Auth, Firestore, FCM, Storage), Google Maps, social logins, and any REST or GraphQL API — making sure data flows reliably between app and backend.",
+      "I integrate payment gateways, Firebase services (Auth, Firestore, FCM, Storage), Google Maps, social logins, and any REST or GraphQL API — making sure data flows reliably between app, web and backend.",
   },
 ];
 
@@ -31,9 +37,9 @@ const Profession = () => {
             <p className="eyebrow">SERVICES</p>
             <h2 className="section-title mt-5">What I do?</h2>
             <p className="section-lead mt-6">
-              I build complete, production-ready products — cross-platform
-              mobile apps with Flutter on the front end and fast, scalable APIs
-              with Python and FastAPI on the back end.
+              I build complete, production-ready products across app and web —
+              cross-platform mobile apps with Flutter, modern web apps with
+              React, and fast, scalable APIs with Python and Flask behind both.
             </p>
             <p className="section-lead mt-4">
               From UI to database, third-party integrations to deployment — I
