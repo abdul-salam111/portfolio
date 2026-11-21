@@ -1,7 +1,7 @@
-import Projects from "./Projects";
+import PortfolioStack from "./PortfolioStack";
 import { projectData } from "../../data/projectData";
 import { useContent } from "../../services/useContent";
-import { Aurora, Magnetic, Reveal, RevealGroup, RevealItem } from "../motion";
+import { Aurora, Magnetic, Reveal } from "../motion";
 
 const GITHUB_URL = "https://github.com/abdul-salam111";
 
@@ -14,31 +14,32 @@ const Portfolio = () => {
   const projects = useContent("projects", projectData);
 
   return (
-    <section id="portfolio" className="section relative overflow-hidden">
+    // No overflow-hidden here: an overflow-hidden ancestor breaks
+    // PortfolioStack's position:sticky pin (it becomes the sticky element's
+    // scrolling container instead of the viewport). Aurora already clips its
+    // own blurred blobs internally, so nothing here actually needed it.
+    <section id="portfolio" className="section relative">
       <Aurora blobs={portfolioBlobs} grain={false} />
       <div className="grid-lines" />
 
+      {/* The heading renders INSIDE PortfolioStack's own sticky box now, so
+          it pins together with the active card as one fixed unit instead of
+          scrolling away on its own first. */}
+      <PortfolioStack
+        projects={projects}
+        heading={
+          <Reveal className="text-center">
+            <span className="eyebrow eyebrow-center">Selected Work</span>
+            <h2 className="section-title mt-4">Portfolio</h2>
+            <p className="section-lead mx-auto mt-5">
+              Here&rsquo;s a selection of my recent work, showcasing my skills in
+              creating user-centric and visually appealing interfaces.
+            </p>
+          </Reveal>
+        }
+      />
+
       <div className="content relative z-10">
-        <Reveal className="text-center">
-          <span className="eyebrow eyebrow-center">Selected Work</span>
-          <h2 className="section-title mt-4">Portfolio</h2>
-          <p className="section-lead mx-auto mt-5">
-            Here&rsquo;s a selection of my recent work, showcasing my skills in
-            creating user-centric and visually appealing interfaces.
-          </p>
-        </Reveal>
-
-        <RevealGroup
-          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 md:mt-16 lg:grid-cols-3"
-          stagger={0.08}
-        >
-          {projects.map((data, index) => (
-            <RevealItem key={data?.id ?? index}>
-              <Projects data={data} />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-
         <Reveal delay={0.08} className="mt-12 flex justify-center md:mt-16">
           <Magnetic strength={0.2}>
             <a

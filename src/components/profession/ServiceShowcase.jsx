@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFlutter, faReact, faPython } from "@fortawesome/free-brands-svg-icons";
 import { faPlug } from "@fortawesome/free-solid-svg-icons";
-import { TiltCard } from "../motion";
 
 const AUTO_ADVANCE_MS = 4500;
 
@@ -13,22 +12,18 @@ const AUTO_ADVANCE_MS = 4500;
 const tones = [
   {
     tile: "bg-primary/15 ring-primary/30 text-primary",
-    beam: "from-primary via-primary/40",
     glow: "var(--color-primary)",
   },
   {
     tile: "bg-accent/15 ring-accent/30 text-accent",
-    beam: "from-accent via-accent/40",
     glow: "var(--color-accent)",
   },
   {
     tile: "bg-success/15 ring-success/30 text-success",
-    beam: "from-success via-success/40",
     glow: "var(--color-success)",
   },
   {
     tile: "bg-secondary/15 ring-secondary/30 text-secondary",
-    beam: "from-secondary via-secondary/40",
     glow: "var(--color-secondary)",
   },
 ];
@@ -41,11 +36,21 @@ const Icon = ({ index, className }) => (
   <FontAwesomeIcon icon={faIcons[index % faIcons.length]} className={className} />
 );
 
+// How far back each card in the deck sits — index 0 is always the active
+// (front) card. Alternating rotation direction is what sells the "fanned
+// hand of cards" read instead of a plain drop-shadow pile.
+const depthOffsets = [
+  { x: 0, y: 0, rotate: 0, scale: 1 },
+  { x: 26, y: 20, rotate: 4, scale: 0.95 },
+  { x: 48, y: 36, rotate: -5, scale: 0.9 },
+  { x: 66, y: 50, rotate: 7, scale: 0.85 },
+];
+
 /**
- * Tab rail + single detail panel instead of a stacked card list — the panel's
- * height stays fixed no matter how many services there are, so the section
- * doesn't grow with the content. Auto-advances on a timer that pauses while
- * the cursor is over it.
+ * A fanned card deck instead of a flat panel: every service is always on
+ * screen, stacked and rotated behind the active one. Clicking a peeking card
+ * brings it to the front — the number rail above stays as the direct jump.
+ * Auto-advances on a timer that pauses while the cursor is over it.
  *
  * Accepts optional `active` + `onSelect` to run as a controlled component if
  * something external ever needs to drive the active tab; omit them (as
@@ -57,8 +62,6 @@ const ServiceShowcase = ({ roles, active: controlledActive, onSelect }) => {
   const [paused, setPaused] = useState(false);
   const active = isControlled ? controlledActive : internalActive;
   const setActive = isControlled ? onSelect : setInternalActive;
-  const tone = tones[active % tones.length];
-  const role = roles[active];
 
   useEffect(() => {
     if (isControlled || paused || roles.length < 2) return;
@@ -117,79 +120,83 @@ const ServiceShowcase = ({ roles, active: controlledActive, onSelect }) => {
         })}
       </div>
 
-      {/* Active service detail — flex-1 so it stretches to match the sticky
-          intro column instead of leaving dead space below a short card. */}
-      <TiltCard max={3} scale={1.006} className="mt-5 flex-1 rounded-[1.75rem]">
-        <div className="panel panel-sheen relative flex h-full min-h-[22rem] flex-col overflow-hidden rounded-[1.75rem] p-7 sm:p-9">
-          {/* Diagonal accent wash — the "funky" bit, swaps tone per tab. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full blur-[90px] transition-colors duration-500"
-            style={{ background: tone.glow, opacity: 0.16 }}
-          />
+      {/* The deck — extra right/bottom room (pr/pb) is so the cards fanned
+          out behind the active one don't clip against the column edge. */}
+      <div className="relative mt-7 min-h-[29rem] flex-1 pr-10 pb-10 sm:pr-16 sm:pb-14">
+        {roles.map((role, i) => {
+          const depth = (i - active + roles.length) % roles.length;
+          const offset = depthOffsets[Math.min(depth, depthOffsets.length - 1)];
+          const tone = tones[i % tones.length];
+          const isFront = depth === 0;
 
-          {/* Oversized watermark number — purely decorative, never read by AT. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute right-6 top-4 select-none font-display text-6xl font-bold leading-none text-fg opacity-[0.06] sm:text-7xl"
-          >
-            {String(active + 1).padStart(2, "0")}
-          </span>
-
-          <AnimatePresence mode="wait">
+          return (
             <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 flex flex-1 flex-col"
+              key={role.id}
+              className={`absolute inset-0 ${isFront ? "" : "cursor-pointer"}`}
+              style={{ zIndex: roles.length - depth }}
+              animate={{
+                x: offset.x,
+                y: offset.y,
+                rotate: offset.rotate,
+                scale: offset.scale,
+                opacity: isFront ? 1 : Math.max(0.5, 1 - depth * 0.18),
+              }}
+              transition={{ type: "spring", stiffness: 240, damping: 26 }}
+              onClick={() => !isFront && setActive(i)}
+              aria-hidden={!isFront}
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`flex size-12 shrink-0 items-center justify-center rounded-2xl ring-1 ${tone.tile}`}
-                >
-                  <Icon index={active} className="size-5" />
-                </div>
-                <h3 className="font-display text-fluid-2xl text-fg">{role?.title}</h3>
-              </div>
-              <p className="mt-4 max-w-[58ch] text-fg-muted">{role?.description}</p>
-
-              {/* mt-auto pins the badges to the bottom of the stretched
-                  content area, just above the progress dots. */}
-              {role?.tags?.length > 0 && (
-                <div className="mt-auto flex flex-wrap gap-2 pt-5">
-                  {role.tags.map((tag) => (
-                    <span key={tag} className="chip">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Progress dots — doubles as a quick "n of 4" cue, anchored under
-              the badges at the card's bottom edge. */}
-          <div className="relative z-10 flex shrink-0 items-center gap-1.5 pt-7">
-            {roles.map((r, i) => (
-              <button
-                key={r.id}
-                type="button"
-                aria-label={`Show ${r.shortTitle}`}
-                onClick={() => setActive(i)}
-                className="cursor-pointer py-2"
+              <div
+                className="panel panel-sheen relative flex h-full flex-col overflow-hidden rounded-[1.75rem] p-7 sm:p-9"
+                style={{ boxShadow: isFront ? "var(--shadow-lifted)" : "var(--shadow-ambient)" }}
               >
+                {/* Diagonal accent wash — swaps tone per card, only lit on the front one. */}
+                {isFront && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full blur-[90px]"
+                    style={{ background: tone.glow, opacity: 0.16 }}
+                  />
+                )}
+
                 <span
-                  className={`block h-1 rounded-full transition-all duration-300 ${
-                    i === active ? "w-6 bg-brand" : "w-1.5 bg-line-strong"
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-      </TiltCard>
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-6 top-4 select-none font-display text-6xl font-bold leading-none text-fg opacity-[0.06] sm:text-7xl"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+
+                <div className="relative z-10 flex items-center gap-4">
+                  <div
+                    className={`flex size-12 shrink-0 items-center justify-center rounded-2xl ring-1 ${tone.tile}`}
+                  >
+                    <Icon index={i} className="size-5" />
+                  </div>
+                  <h3 className="font-display text-fluid-2xl text-fg">{role?.title}</h3>
+                </div>
+
+                {/* Only the front card shows copy — the ones behind are
+                    just a title peeking out, like a real card in a hand. */}
+                {isFront && (
+                  <>
+                    <p className="relative z-10 mt-4 max-w-[58ch] text-fg-muted">
+                      {role?.description}
+                    </p>
+                    {role?.tags?.length > 0 && (
+                      <div className="relative z-10 mt-auto flex flex-wrap gap-2 pt-5">
+                        {role.tags.map((tag) => (
+                          <span key={tag} className="chip">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 };

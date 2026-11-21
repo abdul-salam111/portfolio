@@ -36,7 +36,7 @@ const informationSummaryData = [
 const techBadges = [
   { label: "Flutter", position: "top-[13%] left-0 sm:-left-5", delay: "-0.6s" },
   { label: "React", position: "top-[47%] right-0 sm:-right-5", delay: "-2.9s" },
-  { label: "Flask", position: "top-[72%] left-0 sm:-left-5", delay: "-1.8s" },
+  { label: "FastAPI", position: "top-[72%] left-0 sm:-left-5", delay: "-1.8s" },
   { label: "Firebase", position: "-bottom-4 left-[10%]", delay: "-4.9s" },
 ];
 
@@ -100,7 +100,7 @@ const Introduction = () => {
                 cross-platform mobile apps with{" "}
                 <span className="bg-highlight">Flutter</span>, modern web apps with{" "}
                 <span className="bg-highlight">React</span>, and the{" "}
-                <span className="bg-highlight">Python &amp; Flask</span> backends
+                <span className="bg-highlight">Python &amp; FastAPI</span> backends
                 behind both. Based in Lahore, Pakistan.
               </p>
             </Reveal>
@@ -174,7 +174,7 @@ const Introduction = () => {
               <div className="panel panel-sheen overflow-hidden rounded-[2rem]! p-2">
                 <img
                   src={person}
-                  alt="Abdul Salam, full-stack developer — Flutter, React and Python/Flask"
+                  alt="Abdul Salam, full-stack developer — Flutter, React and Python/FastAPI"
                   width={536}
                   height={636}
                   className="aspect-[536/636] w-full rounded-[1.6rem] object-cover"

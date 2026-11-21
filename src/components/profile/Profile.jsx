@@ -22,7 +22,7 @@ const stack = [
   "Flutter",
   "React",
   "Python",
-  "Flask",
+  "FastAPI",
   "Firebase",
   "PostgreSQL",
 ];
@@ -100,7 +100,7 @@ const Profile = () => {
             <Reveal delay={0.1} className="mt-4 max-w-[62ch]">
               <p className="text-fg-muted text-fluid-base">
                 4+ years building both sides of the product — Flutter &amp;
-                React on the front end, Python &amp; Flask APIs behind them —
+                React on the front end, Python &amp; FastAPI APIs behind them —
                 shipped end to end, production-ready. At Softronix, I work as
                 a full-stack developer across the board — building mobile
                 apps, web apps, and the backends that power them.

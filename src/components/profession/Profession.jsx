@@ -4,7 +4,7 @@ import { Magnetic, Reveal } from "../motion";
 const stackBadges = [
   { label: "Flutter", tone: "bg-primary/15 ring-primary/30 text-primary" },
   { label: "React", tone: "bg-accent/15 ring-accent/30 text-accent" },
-  { label: "Flask", tone: "bg-success/15 ring-success/30 text-success" },
+  { label: "FastAPI", tone: "bg-success/15 ring-success/30 text-success" },
 ];
 
 const rolesData = [
@@ -14,7 +14,17 @@ const rolesData = [
     shortTitle: "Flutter",
     description:
       "I build high-performance, cross-platform mobile apps for Android and iOS using Flutter and Dart — pixel-perfect UI, smooth 60fps animations, and clean, testable architecture from the first screen through store deployment. Every app ships with proper state management, offline support where it matters, and a release pipeline that doesn't depend on me being online.",
-    tags: ["Flutter", "Dart", "BLoC"],
+    tags: [
+      "Flutter",
+      "Dart",
+      "BLoC",
+      "Provider",
+      "GetX",
+      "Firebase",
+      "REST APIs",
+      "Android",
+      "iOS",
+    ],
   },
   {
     id: 2,
@@ -22,15 +32,34 @@ const rolesData = [
     shortTitle: "React",
     description:
       "I build fast, responsive, component-driven web apps and dashboards with React, JavaScript and modern tooling — from marketing landing pages to full client portals with authentication, data tables, and real-time updates. Clean component boundaries and shared design tokens keep the UI consistent as the product grows.",
-    tags: ["React", "JavaScript", "Redux"],
+    tags: [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "Redux",
+      "Next.js",
+      "Vite",
+      "Tailwind CSS",
+      "REST APIs",
+    ],
   },
   {
     id: 3,
-    title: "Backend Development with Flask",
-    shortTitle: "Flask",
+    title: "Backend Development with FastAPI",
+    shortTitle: "FastAPI",
     description:
-      "I design and build production-ready REST APIs using Python and Flask — with JWT auth, database integration (PostgreSQL/SQLite), request validation, and clean, versioned endpoints that serve both mobile and web clients from one source of truth. Every API ships with proper error handling and is ready to scale beyond a single server.",
-    tags: ["Python", "Flask", "PostgreSQL"],
+      "I design and build production-ready REST APIs using Python and FastAPI — with JWT auth, database integration (PostgreSQL/SQLite), request validation, and clean, versioned endpoints that serve both mobile and web clients from one source of truth. Every API ships with proper error handling and is ready to scale beyond a single server.",
+    tags: [
+      "Python",
+      "FastAPI",
+      "Pydantic",
+      "Uvicorn",
+      "PostgreSQL",
+      "SQLAlchemy",
+      "Alembic",
+      "JWT Auth",
+      "Docker",
+    ],
   },
   {
     id: 4,
@@ -38,7 +67,16 @@ const rolesData = [
     shortTitle: "API Integration",
     description:
       "I integrate payment gateways, Firebase services (Auth, Firestore, FCM, Storage), Google Maps, social logins, and any REST or GraphQL API — making sure data flows reliably between app, web and backend. From webhook handling to retry logic, I make sure a third-party outage never takes the whole product down with it.",
-    tags: ["Firebase", "Stripe", "Google Maps"],
+    tags: [
+      "Firebase",
+      "Stripe",
+      "Google Maps",
+      "REST & GraphQL",
+      "OAuth",
+      "Webhooks",
+      "Push Notifications",
+      "Social Logins",
+    ],
   },
 ];
 
@@ -50,7 +88,7 @@ const Profession = () => {
       // The sections before and after this one (About, Work Process) each
       // carry their own padding too, so the default padding here stacked
       // with both into visible gaps above and below.
-      style={{ paddingBlock: "clamp(3rem, 5vw, 4.5rem)" }}
+      style={{ paddingBlock: "clamp(4rem, 7vw, 7rem)" }}
     >
       {/* Soft decorative glow behind the heading — purely atmospheric. */}
       <div
@@ -72,7 +110,7 @@ const Profession = () => {
             <p className="section-lead mt-6">
               I build complete, production-ready products across app and web —
               cross-platform mobile apps with Flutter, modern web apps with
-              React, and fast, scalable APIs with Python and Flask behind both.
+              React, and fast, scalable APIs with Python and FastAPI behind both.
             </p>
             <p className="section-lead mt-4">
               From UI to database, third-party integrations to deployment — I

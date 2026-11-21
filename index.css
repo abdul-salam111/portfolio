@@ -147,6 +147,7 @@
   --animate-pulse-ring: pulse-ring 2.6s var(--ease-out-quint) infinite;
   --animate-marquee-x: marquee-x 38s linear infinite;
   --animate-grain: grain 8s steps(10) infinite;
+  --animate-spin-slow: spin-slow 16s linear infinite;
 }
 
 /* ── Runtime tokens: dark (default) ───────────────────────────────────────── */
@@ -1067,6 +1068,10 @@
   50% { transform: translate(12%, 9%); }
   70% { transform: translate(9%, -4%); }
   90% { transform: translate(-1%, 12%); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
 }
 
 @keyframes scroll-hint {
