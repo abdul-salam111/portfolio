@@ -1,3 +1,14 @@
+import {
+  faApple,
+  faDartLang,
+  faFlutter,
+  faGooglePlay,
+  faPython,
+  faReact,
+} from "@fortawesome/free-brands-svg-icons";
+import { faBolt, faFire } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import person from "../../assets/images/person.png";
 import {
   Aurora,
@@ -32,19 +43,26 @@ const informationSummaryData = [
   },
 ];
 
-// Decorative badges pinned to the portrait frame's edges.
+// Decorative badges pinned to the portrait frame's edges. FastAPI and
+// Supabase have no brand mark in FontAwesome, so they borrow the closest
+// stand-in: Python (what FastAPI is built on) and a bolt (Supabase's own
+// logo is a lightning bolt).
 const techBadges = [
-  { label: "Flutter", position: "top-[13%] left-0 sm:-left-5", delay: "-0.6s" },
-  { label: "React", position: "top-[47%] right-0 sm:-right-5", delay: "-2.9s" },
-  { label: "FastAPI", position: "top-[72%] left-0 sm:-left-5", delay: "-1.8s" },
-  { label: "Firebase", position: "-bottom-4 left-[10%]", delay: "-4.9s" },
+  { label: "Flutter", icon: faFlutter, position: "top-[6%] left-0 sm:-left-5", delay: "-0.6s" },
+  { label: "Dart", icon: faDartLang, position: "top-[6%] right-0 sm:-right-5", delay: "-3.6s" },
+  { label: "React", icon: faReact, position: "top-[30%] right-0 sm:-right-5", delay: "-2.9s" },
+  { label: "Supabase", icon: faBolt, position: "top-[30%] left-0 sm:-left-5", delay: "-5.4s" },
+  { label: "FastAPI", icon: faPython, position: "top-[54%] right-0 sm:-right-5", delay: "-1.8s" },
+  { label: "Firebase", icon: faFire, position: "top-[54%] left-0 sm:-left-5", delay: "-4.9s" },
+  { label: "Play Store", icon: faGooglePlay, position: "-bottom-4 left-[10%]", delay: "-2.2s" },
+  { label: "App Store", icon: faApple, position: "-bottom-4 right-[10%]", delay: "-6.1s" },
 ];
 
 const Introduction = () => {
   return (
     <section
       id="introduction"
-      className="relative flex min-h-[100svh] items-center overflow-hidden bg-bg pt-28 pb-24 lg:pt-32 lg:pb-28"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-bg pt-44 pb-24 lg:pt-48 lg:pb-28"
     >
       <Aurora />
       <div className="grid-lines" />
@@ -192,6 +210,7 @@ const Introduction = () => {
                     animationDelay: badge.delay,
                   }}
                 >
+                  <FontAwesomeIcon icon={badge.icon} className="text-brand" />
                   {badge.label}
                 </span>
               ))}

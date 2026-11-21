@@ -32,7 +32,7 @@ const floatOnFocus =
 const floatOnFilled =
   "peer-[&:not(:placeholder-shown)]:top-2.5 peer-[&:not(:placeholder-shown)]:translate-y-0 peer-[&:not(:placeholder-shown)]:font-mono peer-[&:not(:placeholder-shown)]:text-fluid-xs peer-[&:not(:placeholder-shown)]:uppercase peer-[&:not(:placeholder-shown)]:tracking-[0.16em]";
 
-const empty = { name: "", email: "", location: "", budget: "", subject: "", message: "" };
+const empty = { name: "", email: "", location: "", subject: "", message: "" };
 
 /**
  * Text control with a CSS-only floating label: `placeholder=" "` keeps
@@ -175,10 +175,7 @@ const Form = () => {
 
               <Field id="location" label="Location" autoComplete="address-level2" value={fields.location} onChange={(e) => set("location", e.target.value)} />
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field id="budget" label="Budget" value={fields.budget} onChange={(e) => set("budget", e.target.value)} />
-                <Field id="subject" label="Subject" value={fields.subject} onChange={(e) => set("subject", e.target.value)} />
-              </div>
+              <Field id="subject" label="Subject" value={fields.subject} onChange={(e) => set("subject", e.target.value)} />
 
               <Field id="message" label="Message" textarea rows={4} value={fields.message} onChange={(e) => set("message", e.target.value)} />
 

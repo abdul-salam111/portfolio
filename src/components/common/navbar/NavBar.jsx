@@ -128,16 +128,11 @@ const NavBar = () => {
   };
 
   const wordmark = (
-    <>
-      <img
-        src={logo}
-        alt="Abdul Salam"
-        className="h-9 w-9 rounded-xl border border-line object-cover"
-      />
-      <span className="font-display text-fluid-lg font-semibold tracking-tight text-fg">
-        Abdul Salam
-      </span>
-    </>
+    <img
+      src={logo}
+      alt="Abdul Salam"
+      className="h-16 w-16 rounded-xl border border-line object-cover"
+    />
   );
 
   return (

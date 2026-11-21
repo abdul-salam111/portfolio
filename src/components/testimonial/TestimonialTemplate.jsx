@@ -11,7 +11,7 @@ const TestimonialTemplate = ({ testimonial }) => {
   const initial = testimonial?.name?.trim().charAt(0).toUpperCase() ?? "";
 
   return (
-    <figure className="glass-panel flex h-full w-full flex-col overflow-hidden px-6 py-10 text-center sm:px-10 sm:py-12 md:px-14 md:py-16">
+    <figure className="glass-panel flex h-full w-full flex-col overflow-hidden px-6 py-7 text-center sm:px-10 sm:py-9 md:px-14 md:py-11">
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -top-10 left-1 select-none font-display text-[9rem] leading-none text-brand/10 sm:left-6 sm:text-[13rem]"
@@ -27,13 +27,13 @@ const TestimonialTemplate = ({ testimonial }) => {
         </p>
 
         {testimonial?.quote && (
-          <p className="mx-auto mt-6 max-w-[58ch] text-fluid-base text-fg-muted">
+          <p className="mx-auto mt-4 max-w-[58ch] text-fluid-base text-fg-muted">
             {testimonial.quote}
           </p>
         )}
       </blockquote>
 
-      <hr className="my-8 h-px w-full border-0" style={ruleStyle} aria-hidden="true" />
+      <hr className="my-5 h-px w-full border-0" style={ruleStyle} aria-hidden="true" />
 
       <figcaption className="relative z-10 flex items-center justify-center gap-3.5 text-left">
         <span

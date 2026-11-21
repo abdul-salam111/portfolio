@@ -44,7 +44,10 @@ const Testimonial = () => {
   const testimonials = useContent("testimonials", testimonialData);
 
   return (
-    <section className="section relative overflow-hidden bg-bg">
+    <section
+      className="section relative overflow-hidden bg-bg"
+      style={{ paddingBlock: "clamp(3rem, 5vw, 4.5rem)" }}
+    >
       <Aurora />
       <div className="content relative z-10">
         <Reveal direction="none" duration={0.8} className="mx-auto max-w-[46rem] text-center">
@@ -52,7 +55,7 @@ const Testimonial = () => {
           <h2 className="section-title mt-4">What clients say</h2>
         </Reveal>
 
-        <Reveal delay={0.08} className="mx-auto mt-12 w-full max-w-[52rem] md:mt-16">
+        <Reveal delay={0.08} className="mx-auto mt-8 w-full max-w-[52rem] md:mt-10">
           <Swiper
             id="testimonialSwiper"
             style={swiperVars}
