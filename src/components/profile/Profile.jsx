@@ -20,19 +20,11 @@ const metrics = [
 
 const stack = [
   "Flutter",
-  "Dart",
   "React",
-  "Redux",
-  "JavaScript",
-  "HTML/CSS",
-  "BLoC",
-  "Provider",
-  "Firebase",
-  "REST APIs",
   "Python",
   "Flask",
+  "Firebase",
   "PostgreSQL",
-  "Clean Architecture",
 ];
 
 const Profile = () => {
@@ -40,9 +32,10 @@ const Profile = () => {
     <section
       id="profile"
       className="section relative bg-bg-elev border-y border-line"
+      style={{ paddingBlock: "clamp(2.5rem, 5vw, 4.5rem)" }}
     >
       <div className="content">
-        <div className="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-16">
+        <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
           {/* Image column */}
           <div className="lg:col-span-5">
             <div className="relative mx-auto w-full max-w-[24rem] lg:max-w-none">
@@ -96,36 +89,27 @@ const Profile = () => {
               as="h2"
               by="word"
               text="Full-Stack Developer at Softronix"
-              className="section-title mt-5"
+              // section-title's default size runs too large for this longer
+              // heading; sized down the same way HappyClients does.
+              className="section-title mt-4 !text-fluid-3xl"
               // section-title's 1.04 leading clips descenders inside the
               // per-word clip boxes TextReveal renders.
               style={{ lineHeight: 1.14 }}
             />
 
-            <Reveal delay={0.1} className="mt-6 max-w-[62ch] space-y-4">
+            <Reveal delay={0.1} className="mt-4 max-w-[62ch]">
               <p className="text-fg-muted text-fluid-base">
-                With 4+ years of experience, I build both sides of the
-                product: cross-platform mobile apps for Android and iOS with
-                Flutter and Dart — fluent in BLoC and Provider state
-                management, RESTful API integration, Firebase services, and
-                clean architecture (MVVM/MVC) — and responsive, component-driven
-                web apps with React.
-              </p>
-              <p className="text-fg-muted text-fluid-base">
-                I also write the backends both talk to, in Python and Flask:
-                JWT auth, PostgreSQL schemas and migrations, and REST APIs
-                designed once, by one person, instead of negotiated across
-                two teams.
-              </p>
-              <p className="text-fg-muted text-fluid-base">
-                That architecture work shows up in production. Across the apps
-                I have shipped, it holds under real traffic:
+                4+ years building both sides of the product — Flutter &amp;
+                React on the front end, Python &amp; Flask APIs behind them —
+                shipped end to end, production-ready. At Softronix, I work as
+                a full-stack developer across the board — building mobile
+                apps, web apps, and the backends that power them.
               </p>
             </Reveal>
 
             <RevealGroup
               stagger={0.08}
-              className="mt-7 grid max-w-[36rem] grid-cols-3 gap-x-4 border-y border-line py-6 sm:gap-x-8"
+              className="mt-5 grid max-w-[36rem] grid-cols-3 gap-x-4 border-y border-line py-4 sm:gap-x-8"
             >
               {metrics.map((metric) => (
                 <RevealItem key={metric.label}>
@@ -139,7 +123,7 @@ const Profile = () => {
               ))}
             </RevealGroup>
 
-            <RevealGroup stagger={0.05} className="mt-7 flex flex-wrap gap-2">
+            <RevealGroup stagger={0.05} className="mt-5 flex flex-wrap gap-2">
               {stack.map((tech) => (
                 <RevealItem as="span" key={tech} className="chip">
                   {tech}
@@ -149,7 +133,7 @@ const Profile = () => {
 
             <Reveal
               delay={0.08}
-              className="mt-9 flex flex-wrap items-center gap-3"
+              className="mt-6 flex flex-wrap items-center gap-3"
             >
               <Magnetic strength={0.24} className="inline-flex">
                 <a className="btn btn-primary btn-lg px-7" href="#portfolio">

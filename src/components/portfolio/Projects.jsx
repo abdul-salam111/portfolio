@@ -8,24 +8,24 @@ const chipWrap = { maxWidth: "100%", whiteSpace: "normal", overflowWrap: "anywhe
 
 // Hides the seam where the image meets the card body.
 const scrim = {
-  background: "linear-gradient(to top, var(--surface-solid) 6%, transparent 78%)",
+  background: "linear-gradient(to top, var(--surface-solid) 8%, transparent 62%)",
 };
 
-const Projects = ({ data, featured = false }) => {
+const Projects = ({ data }) => {
   // Admin-entered categories aren't guaranteed to use the exact " · " spacing
   // the bundled rows do, so split on the separator itself.
   const tags = String(data?.category ?? "")
     .split(/\s*·\s*/)
     .map((tag) => tag.trim())
     .filter(Boolean)
-    .slice(0, 3);
+    .slice(0, 2);
 
   const title = data?.title ?? "Untitled project";
   const blurb = data?.about || data?.tagline;
 
   return (
     <TiltCard
-      max={featured ? 3.5 : 5}
+      max={5}
       scale={1.015}
       className="border-beam relative h-full rounded-[1.25rem] transition-shadow duration-300 hover:shadow-[var(--shadow-lifted)]"
     >
@@ -34,11 +34,9 @@ const Projects = ({ data, featured = false }) => {
         to={`/project/${data?.id}`}
         data-cursor="View"
         aria-label={`Open the ${title} case study`}
-        className="panel group relative flex h-full flex-col overflow-hidden"
+        className="panel panel-sheen group relative flex h-full flex-col overflow-hidden"
       >
-        <div
-          className={`relative overflow-hidden ${featured ? "aspect-[16/9]" : "aspect-[16/10]"}`}
-        >
+        <div className="relative aspect-[16/11] overflow-hidden">
           <img
             src={data?.image}
             alt={`${title} interface preview`}
@@ -63,11 +61,7 @@ const Projects = ({ data, featured = false }) => {
             </div>
           )}
 
-          <h3
-            className={`font-display mt-4 break-words text-fg ${
-              featured ? "text-fluid-2xl" : "text-fluid-xl"
-            }`}
-          >
+          <h3 className="font-display mt-4 break-words text-fluid-xl text-fg">
             {title}
           </h3>
 

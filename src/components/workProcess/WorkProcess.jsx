@@ -1,6 +1,4 @@
-import { useRef } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
-import { Reveal, RevealGroup, useMotionPrefs } from "../motion";
+import { Reveal, RevealGroup } from "../motion";
 import WorkSteps from "./WorkSteps";
 
 const workStepData = [
@@ -39,70 +37,45 @@ const workStepData = [
 ];
 
 const WorkProcess = () => {
-  const timelineRef = useRef(null);
-  const { reduced } = useMotionPrefs();
-
-  // Fills the accent rail as the reader moves through the steps.
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start 70%", "end 60%"],
-  });
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 26,
-    mass: 0.35,
-  });
-
   return (
-    <section id="work-process" className="section relative">
-      <div className="content grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="self-start lg:sticky lg:top-32 lg:col-span-5">
-          <span className="eyebrow">How I Work</span>
+    <section
+      id="work-process"
+      className="section relative border-t border-line"
+      // The previous section (Services) already carries its own bottom
+      // padding, so the default top padding here stacked with it into a gap.
+      style={{ paddingTop: "clamp(2rem, 4vw, 3.5rem)" }}
+    >
+      <div className="content">
+        <Reveal className="mx-auto max-w-[46rem] text-center">
+          <span className="eyebrow justify-center [&::before]:hidden">How I Work</span>
           <h2 className="section-title mt-5">Work Process</h2>
-          <p className="section-lead mt-6">
-            A structured, outcome-driven approach to every project: understand
-            the problem first, then design systems built to last, not just built
-            to ship.
+          <p className="section-lead mx-auto mt-5">
+            A structured, outcome-driven approach to every project — plan
+            thoroughly, build cleanly, test rigorously, deliver reliably.
           </p>
-          <p className="section-lead mt-4">
-            Mobile app, backend service or full-stack product — the process
-            holds. Plan thoroughly, build cleanly, test rigorously, deliver
-            reliably.
-          </p>
-          <span className="chip mt-8">Four stages · every engagement</span>
         </Reveal>
 
-        <div ref={timelineRef} className="relative lg:col-span-7">
-          {/* Rail sits on the node centres (left-6 = half of the 3rem node). */}
+        {/* A zig-zag path instead of a stacked list or a flat row: cards
+            alternate above/below a central spine, each tethered to it by a
+            short stem — reads as a journey, not a form. Collapses to a
+            plain stacked list below lg, where there's no room to zig-zag. */}
+        <div className="relative mt-16 lg:mt-28 lg:h-[33rem]">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-6 bottom-0 left-6 w-px -translate-x-1/2"
+            className="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px -translate-y-1/2 lg:block"
             style={{
               background:
-                "linear-gradient(to bottom, var(--border-hairline), var(--border-hairline) 80%, transparent)",
-            }}
-          />
-          <motion.span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-6 bottom-0 left-6 w-px"
-            style={{
-              background:
-                "linear-gradient(to bottom, var(--accent), var(--accent-soft))",
-              boxShadow: "0 0 12px var(--glow)",
-              transformOrigin: "top",
-              x: "-50%",
-              scaleY: reduced ? 1 : progress,
+                "linear-gradient(to right, transparent, var(--border-hairline) 6%, var(--accent) 50%, var(--border-hairline) 94%, transparent)",
             }}
           />
 
-          <RevealGroup role="list" className="relative" stagger={0.1}>
+          <RevealGroup
+            role="list"
+            className="grid gap-5 sm:grid-cols-2 lg:h-full lg:grid-cols-4 lg:gap-3"
+            stagger={0.12}
+          >
             {workStepData.map((data, index) => (
-              <WorkSteps
-                key={data.id}
-                data={data}
-                index={index}
-                total={workStepData.length}
-              />
+              <WorkSteps key={data.id} data={data} index={index} />
             ))}
           </RevealGroup>
         </div>
